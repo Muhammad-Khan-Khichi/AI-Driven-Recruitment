@@ -42,7 +42,13 @@ class JobFinderAgent:
         self.generate_letters = generate_letters
         self.last_vector_stats = None  # Track for API response
 
-    def run(self, resume_path: str, candidate_name: str = "Candidate", user_id: int = None) -> dict:
+    def run(
+        self,
+        resume_path: str,
+        candidate_name: str = "Candidate",
+        user_id: int = None,
+        custom_keywords: list = None  # ✅ NEW PARAMETER
+    ) -> dict:
         """Main agent workflow with semantic + AI hybrid ranking."""
         logger.info(f"Starting job search for: {resume_path}")
 
@@ -62,8 +68,17 @@ class JobFinderAgent:
         # ─── Step 3: Search jobs from external APIs ─────────
         logger.info("[3/5] Searching job boards")
         all_jobs = []
-        for title in profile.get("job_titles", [])[:3]:
-            jobs = search_all_sources(title, self.location)
+
+        # ✅ NEW: Use custom_keywords if provided, else fall back to resume job_titles
+        if custom_keywords and len(custom_keywords) > 0:
+            search_terms = custom_keywords[:5]  # Use top 5 custom keywords
+            logger.info(f"  Using {safe_len(search_terms)} custom keywords: {search_terms}")
+        else:
+            search_terms = profile.get("job_titles", [])[:3]
+            logger.info(f"  Using {safe_len(search_terms)} resume-extracted roles")
+
+        for term in search_terms:
+            jobs = search_all_sources(term, self.location)
             all_jobs.extend(jobs)
 
         unique_jobs = deduplicate_jobs(all_jobs)
@@ -71,10 +86,10 @@ class JobFinderAgent:
 
         # ─── Step 4: Semantic search via ChromaDB ────────────
         logger.info("[4/5] Running semantic search (ChromaDB + sentence-transformers)")
-        
+
         job_store = None
         self.last_vector_stats = {"total_jobs": 0}
-        
+
         # 4a. Index fetched jobs into vector store
         try:
             job_store = JobVectorStore()
@@ -118,7 +133,7 @@ class JobFinderAgent:
 
         # ─── Step 5: AI ranking (Mistral) on top candidates ─
         logger.info("[5/5] AI ranking top candidates (Mistral)")
-        filtered_jobs = filter_jobs_with_ai(jobs_for_ai_ranking, profile, min_score=60)
+        filtered_jobs = filter_jobs_with_ai(jobs_for_ai_ranking, profile, min_score=40)
 
         # 5a. Combine semantic + AI scores
         for job in filtered_jobs:
@@ -128,7 +143,7 @@ class JobFinderAgent:
                 if s.get("url") == job.get("url") or s.get("title") == job.get("title"):
                     sem_score = s.get("similarity_score", 0) * 100
                     break
-            
+
             ai_score = job.get("score", 0) or job.get("match_score", 0)
             # Weighted: 40% semantic + 60% AI (AI gets more weight because it's context-aware)
             job["final_score"] = round(0.4 * sem_score + 0.6 * ai_score, 2)
@@ -172,8 +187,10 @@ class JobFinderAgent:
             "ranked_matches": ranked_output,
             "cover_letters_generated": safe_len(cover_letter_paths),
             "jobs": top_matches,
+            "all_jobs": unique_jobs,  # ✅ NEW: Include all_jobs for resume-based search
             "semantic_search_used": safe_len(semantic_results) > 0,
-            "vector_db_jobs": self.last_vector_stats.get("total_jobs", 0) if self.last_vector_stats else 0
+            "vector_db_jobs": self.last_vector_stats.get("total_jobs", 0) if self.last_vector_stats else 0,
+            "search_keywords_used": search_terms  # ✅ NEW: Track what we searched for
         }
 
         save_results(results, settings.OUTPUT_FILE)
@@ -190,7 +207,8 @@ def run_job_search(
     generate_cover_letters: bool = False,
     location: str = None,
     top_n: int = None,
-    user_id: int = None
+    user_id: int = None,
+    custom_keywords: list = None  # ✅ NEW PARAMETER
 ) -> dict:
     """
     Function-based interface used by the FastAPI layer.
@@ -208,7 +226,8 @@ def run_job_search(
         results = agent.run(
             resume_path=resume_path,
             candidate_name=user_name,
-            user_id=user_id
+            user_id=user_id,
+            custom_keywords=custom_keywords  # ✅ PASS IT THROUGH
         )
 
         # Normalize output for API
@@ -225,8 +244,10 @@ def run_job_search(
             "cover_letters_generated": results.get("cover_letters_generated", 0),
             "top_jobs": results.get("jobs", []),
             "ranked_matches": results.get("ranked_matches", []),
+            "all_jobs": results.get("all_jobs", []),  # ✅ NEW: Include for scoring
             "semantic_search_used": results.get("semantic_search_used", False),
             "vector_db_jobs": results.get("vector_db_jobs", 0),
+            "search_keywords_used": results.get("search_keywords_used", []),  # ✅ NEW
             "location": location
         }
 
@@ -237,6 +258,7 @@ def run_job_search(
             "error": str(e),
             "profile": None,
             "top_jobs": [],
+            "all_jobs": [],  # ✅ NEW
             "total_jobs_found": 0,
             "top_matches_count": 0,
             "cover_letters_generated": 0,

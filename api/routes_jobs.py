@@ -6,18 +6,27 @@ from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Query
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
 
-from database.db import get_db, User, Resume, JobSearch, Application   
+from database.db import get_db, User, Resume, JobSearch, Application
 from .auth import get_current_user
 from agent.resume_agent import run_job_search
 from agent.filter_tools import filter_jobs
 
-# ✅ ONLY ONE ROUTER
+
 router = APIRouter(prefix="/api/jobs", tags=["Jobs"])
 
 
-# ─── Request Models ───────────────────────────────────────
+#Request Models
 class JobSearchRequest(BaseModel):
     location: Optional[str] = None
+    generate_cover_letters: bool = False
+
+
+class ResumeJobSearchRequest(BaseModel):
+    """Search jobs using resume skills as keywords."""
+    resume_id: Optional[int] = None
+    location: Optional[str] = None
+    max_results_per_keyword: int = 20
+    min_match_score: int = 20
     generate_cover_letters: bool = False
 
 
@@ -42,7 +51,7 @@ class FilterRequest(BaseModel):
     keywords_excluded: Optional[List[str]] = None
 
 
-# ─── Resume Upload ────────────────────────────────────────
+#Resume Upload
 @router.post("/upload-resume")
 def upload_resume(
     file: UploadFile = File(...),
@@ -85,7 +94,7 @@ def upload_resume(
     }
 
 
-# ─── Job Search (POST) ────────────────────────────────────
+#Job Search (POST)
 @router.post("/search")
 def search_jobs(
     request: JobSearchRequest,
@@ -119,7 +128,7 @@ def search_jobs(
     return results
 
 
-# ─── Search History ───────────────────────────────────────
+#Search History
 @router.get("/history")
 def get_search_history(
     current_user: User = Depends(get_current_user),
@@ -140,7 +149,7 @@ def get_search_history(
     ]
 
 
-# ─── Applications ─────────────────────────────────────────
+#Applications
 @router.post("/applications")
 def track_application(
     request: ApplicationRequest,
@@ -220,7 +229,7 @@ def update_application(
     return {"id": app.id, "status": app.status, "notes": app.notes}
 
 
-# ─── Smart Filtering ──────────────────────────────────────
+#Smart Filtering
 @router.post("/filter")
 async def filter_jobs_endpoint(req: FilterRequest):
     """Apply smart filters to a list of jobs."""
@@ -245,3 +254,231 @@ async def filter_jobs_endpoint(req: FilterRequest):
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Filter error: {str(e)}")
+
+
+# ============================================================
+#  Resume-Based Job Search (NEW!)
+# ============================================================
+@router.post("/search-by-resume")
+def search_jobs_by_resume(
+    request: ResumeJobSearchRequest,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Search for jobs using keywords extracted from user's resume.
+
+    Workflow:
+    1. Get user's resume (specific or latest)
+    2. Extract skills from resume.extracted_skills
+    3. Generate smart search keyword combinations
+    4. Run job search for each keyword combination
+    5. Score each job against resume skills
+    6. Sort by match score (highest first)
+    7. Filter by min_match_score
+    """
+    # Step 1: Get resume
+    if request.resume_id:
+        resume = db.query(Resume).filter(
+            Resume.id == request.resume_id,
+            Resume.user_id == current_user.id
+        ).first()
+    else:
+        resume = db.query(Resume).filter(
+            Resume.user_id == current_user.id
+        ).order_by(Resume.uploaded_at.desc()).first()
+
+    if not resume:
+        raise HTTPException(
+            status_code=400,
+            detail="No resume found. Please upload a resume first."
+        )
+
+    # Step 2: Extract skills from resume
+    resume_skills = []
+    if resume.extracted_skills:
+        try:
+            skills_data = json.loads(resume.extracted_skills)
+            if isinstance(skills_data, list):
+                resume_skills = skills_data
+            elif isinstance(skills_data, dict):
+                resume_skills = skills_data.get("skills", [])
+        except (json.JSONDecodeError, TypeError):
+            # Fallback: parse as comma-separated
+            resume_skills = [
+                s.strip() for s in resume.extracted_skills.split(",") if s.strip()
+            ]
+
+    if not resume_skills:
+        raise HTTPException(
+            status_code=400,
+            detail="Resume has no extracted skills. Please re-upload your resume."
+        )
+
+    # Step 3: Generate smart search keywords
+    search_keywords = generate_search_keywords(resume_skills)
+
+    # Step 4: Run job search for each keyword
+    all_jobs = []
+    search_results = []
+
+    for keyword in search_keywords[:3]:  # Top 3 keyword combos
+        try:
+            # Use your existing run_job_search agent!
+            results = run_job_search(
+                resume_path=resume.file_path,
+                user_name=current_user.full_name or current_user.username,
+                generate_cover_letters=False,  # Skip for speed
+                location=request.location or current_user.location,
+                user_id=current_user.id,
+                custom_keywords=[keyword]  # ✅ Pass single keyword as list
+            )
+
+            jobs = results.get("all_jobs", [])
+            all_jobs.extend(jobs)
+            search_results.append({
+                "keyword": keyword,
+                "jobs_found": len(jobs)
+            })
+        except Exception as e:
+            print(f"Search failed for '{keyword}': {e}")
+            continue
+
+    # Remove duplicates (same title + company)
+    seen = set()
+    unique_jobs = []
+    for job in all_jobs:
+        title = (job.get("title") or "").lower().strip()
+        company = (job.get("company") or "").lower().strip()
+        key = f"{title}|{company}"
+        if key not in seen and title:  # Must have title
+            seen.add(key)
+            unique_jobs.append(job)
+
+    # Step 5: Score each job
+    scored_jobs = []
+    for job in unique_jobs:
+        score, matched, missing = score_job_against_skills(job, resume_skills)
+
+        if score >= request.min_match_score:
+            job_copy = dict(job)
+            job_copy["match_score"] = score
+            job_copy["matched_skills"] = matched
+            job_copy["missing_skills"] = missing[:5]  # Top 5 missing
+            scored_jobs.append(job_copy)
+
+    # Step 6: Sort by match score
+    scored_jobs.sort(key=lambda x: x.get("match_score", 0), reverse=True)
+
+    # Step 7: Limit results
+    final_jobs = scored_jobs[:request.max_results_per_keyword * 3]
+
+    # Save search history
+    search = JobSearch(
+        user_id=current_user.id,
+        resume_id=resume.id,
+        location=request.location or current_user.location,
+        jobs_found=json.dumps(final_jobs[:50]),  # Save top 50
+        top_matches=json.dumps(final_jobs[:10])   # Save top 10
+    )
+    db.add(search)
+    db.commit()
+
+    return {
+        "status": "success",
+        "resume_id": resume.id,
+        "resume_skills": resume_skills,
+        "search_keywords": search_keywords,
+        "keyword_searches": search_results,
+        "total_jobs_found": len(final_jobs),
+        "jobs": final_jobs
+    }
+
+
+def generate_search_keywords(skills: List[str]) -> List[str]:
+    """
+    Generate smart search keyword combinations from resume skills.
+
+    Examples:
+    ["Python", "FastAPI", "AWS", "Docker"] →
+    ["Python FastAPI", "Python Developer", "FastAPI AWS", "Python AWS Docker"]
+    """
+    keywords = []
+
+    # Clean skills
+    clean_skills = [s.strip() for s in skills if s and s.strip()]
+
+    if not clean_skills:
+        return []
+
+    # Single skill searches (top 3 skills)
+    for skill in clean_skills[:3]:
+        keywords.append(f"{skill} Developer")
+        keywords.append(f"{skill} Engineer")
+
+    # Two-skill combinations (top 2 skills)
+    if len(clean_skills) >= 2:
+        keywords.append(f"{clean_skills[0]} {clean_skills[1]}")
+        keywords.append(f"{clean_skills[0]} {clean_skills[1]} Developer")
+
+    # Three-skill combinations
+    if len(clean_skills) >= 3:
+        keywords.append(f"{clean_skills[0]} {clean_skills[1]} {clean_skills[2]}")
+
+    # Remove duplicates and empty strings
+    seen = set()
+    unique = []
+    for kw in keywords:
+        kw = kw.strip()
+        if kw and kw.lower() not in seen:
+            seen.add(kw.lower())
+            unique.append(kw)
+
+    return unique
+
+
+def score_job_against_skills(job: dict, resume_skills: List[str]) -> tuple:
+    """
+    Score how well a job matches the resume skills.
+
+    Returns:
+        (score: int 0-100, matched_skills: List[str], missing_skills: List[str])
+    """
+    # Combine all job text for matching
+    job_text_parts = [
+        job.get("title", "") or "",
+        job.get("description", "") or "",
+        job.get("snippet", "") or "",
+        job.get("requirements", "") or ""
+    ]
+    job_text = " ".join(job_text_parts).lower()
+
+    # Normalize resume skills
+    resume_skills_clean = [s.lower().strip() for s in resume_skills if s and s.strip()]
+
+    matched = []
+    missing = []
+
+    for skill in resume_skills_clean:
+        if skill in job_text:
+            matched.append(skill)
+        else:
+            missing.append(skill)
+
+    # Calculate base score
+    if not resume_skills_clean:
+        return 0, [], []
+
+    score = int((len(matched) / len(resume_skills_clean)) * 100)
+
+    # Bonus: skill in job title (10% boost)
+    job_title_lower = (job.get("title", "") or "").lower()
+    for skill in resume_skills_clean:
+        if skill in job_title_lower:
+            score += 10
+            break
+
+    # Cap at 100
+    score = min(score, 100)
+
+    return score, matched, missing
