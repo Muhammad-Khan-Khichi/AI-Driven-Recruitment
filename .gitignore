@@ -1,0 +1,29 @@
+# Virtual Environment
+venv/
+env/
+Lib/
+Scripts/
+share/
+uv.lock
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Environment
+.env
+*.db
+*.sqlite
+
+# IDE
+.vscode/
+.idea/
+
+# Data (don't commit large files)
+data/resumes/*.pdf
+data/cover_letters/*.pdf
+data/cover_letters/*.txt
+database/* .db
+chroma_data/*
