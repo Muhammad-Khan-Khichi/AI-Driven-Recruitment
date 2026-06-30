@@ -1,0 +1,155 @@
+{
+  "profile": {
+    "job_titles": [
+      "Machine Learning Engineer",
+      "Data Scientist",
+      "MLOps Engineer",
+      "Data Analyst",
+      "Business Intelligence Developer"
+    ],
+    "skills": [
+      "Python",
+      "Scikit-Learn",
+      "Pandas",
+      "NumPy",
+      "TF-IDF Vectorization",
+      "Cosine Similarity",
+      "Random Forest",
+      "Logistic Regression",
+      "Streamlit",
+      "FastAPI"
+    ],
+    "experience_years": 2,
+    "level": "mid",
+    "name": "System Administrator",
+    "resume_path": "data/resumes\\user_6_resume.pdf"
+  },
+  "total_jobs_found": 25,
+  "top_matches_count": 10,
+  "ranked_matches": "Here’s your ranked list of the **TOP 10 jobs** in Lahore/Pakistan, ordered from **BEST to WORST match** based on skill overlap, experience level, and role alignment:\n\n---\n\n### **1. Machine Learning Engineer (Remote) at Hire Feed**\n   **Match Score: 90/100**\n   **Why:** Perfect fit for a **mid-level ML Engineer**—covers all core skills (Python, Scikit-Learn, TF-IDF, Random Forest, etc.) and includes deployment tools (Streamlit/FastAPI) critical for ML engineering.\n   **Missing:** No explicit mention of **PyTorch/TensorFlow** (though Scikit-Learn + Random Forest suffice for many ML tasks).\n   **Apply:** [LinkedIn](https://pk.linkedin.com/jobs/view/machine-learning-engineer-remote-at-hire-feed-4434738409)\n\n---\n\n### **2. Machine Learning (AI) Engineer (Hybrid) at Hire Feed**\n   **Match Score: 88/100**\n   **Why:** Hybrid role aligns well with your skills (Python, NLP tools, ML models) and includes **local Lahore flexibility**—ideal for mid-level ML engineers.\n   **Missing:** Lacks emphasis on **scalable production systems** (e.g., Docker, Kubernetes), though Streamlit/FastAPI help bridge this.\n   **Apply:** [LinkedIn](https://pk.linkedin.com/jobs/view/machine-learning-ai-engineer-hybrid-at-hire-feed-4434724165)\n\n---\n\n### **3. Artificial Intelligence Specialist at Recruitzz (Lahore)**\n   **Match Score: 85/100**\n   **Why:** Local Lahore role with strong overlap in **Python, Scikit-Learn, and ML algorithms**—great for hands-on AI development.\n   **Missing:** Less clarity on **deployment/MLOps** (though Streamlit could compensate).\n   **Apply:** [LinkedIn](https://pk.linkedin.com/jobs/view/artificial-intelligence-specialist-at-recruitzz-4431505029)\n\n---\n\n### **4. Data Scientist - AI/ML (Remote) at Hire Feed**\n   **Match Score: 82/100**\n   **Why:** Directly matches **Data Scientist** skills (TF-IDF, Logistic Regression, Pandas) and includes remote flexibility.\n   **Missing:** Less emphasis on **ML engineering deployment** (e.g., FastAPI) than pure ML roles.\n   **Apply:** [LinkedIn](https://pk.linkedin.com/jobs/view/data-scientist-ai-ml-remote-at-hire-feed-4434924820)\n\n---\n\n### **5. Machine Learning Engineer - AI (Remote) at Hire Feed**\n   **Match Score: 80/100**\n   **Why:** Nearly identical to #1 but slightly less emphasis on **hybrid/local roles**—still a strong fit.\n   **Missing:** No mention of **NLP-heavy tasks** (though TF-IDF/Cosine Similarity help).\n   **Apply:** [LinkedIn](https://pk.linkedin.com/jobs/view/machine-learning-engineer-ai-remote-at-hire-feed-4434725484)\n\n---\n\n### **6. Senior AI/ML Engineer at Funavry Technologies (Islamabad)**\n   **Match Score: 78/100**\n   **Why:** Senior-level role with **MLOps/engineering overlap** (Streamlit/FastAPI), but requires **more experience** than mid-level.\n   **Missing:** Likely expects **advanced frameworks** (PyTorch/TensorFlow) beyond Scikit-Learn.\n   **Apply:** [LinkedIn](https://pk.linkedin.com/jobs/view/senior-ai-ml-engineer-at-funavry-technologies-4434964117)\n\n---\n\n### **7. Machine Learning Researcher (Remote) at Hire Feed**\n   **Match Score: 75/100**\n   **Why:** Research role aligns with **ML algorithms** (Random Forest, Logistic Regression) but may require **more theoretical depth**.\n   **Missing:** Less focus on **production deployment** (Streamlit/FastAPI are secondary here).\n   **Apply:** [LinkedIn](https://pk.linkedin.com/jobs/view/machine-learning-researcher-remote-at-hire-feed-4434488174)\n\n---\n\n### **8. Member of Technical Staff - AI Engineering (Remote) at Hire Feed**\n   **Match Score: 73/100**\n   **Why:** Broad AI role with **MLOps potential** (Streamlit/FastAPI), but title suggests **more senior responsibilities**.\n   **Missing:** May require **systems design** experience beyond your current scope.\n   **Apply:** [LinkedIn](https://pk.linkedin.com/jobs/view/member-of-technical-staff-ai-engineering-remote-at-hire-feed-4434707579)\n\n---\n\n### **9. Artificial Intelligence Engineer, LearnWith.AI (Remote) - $200K/year**\n   **Match Score: 70/100**\n   **Why:** High-paying role with **MLOps/engineering overlap**, but **$200K salary suggests senior/expert level**.\n   **Missing:** Likely expects **deep expertise in modern ML frameworks** (e.g., PyTorch).\n   **Apply:** [LinkedIn](https://pk.linkedin.com/jobs/view/artificial-intelligence-engineer-learnwith-ai-remote-%24200-000-year-usd-at-crossover-4431434060)\n\n---\n\n### **10. ML Engineer (San Francisco, AI Startup)**\n   **Match Score: 65/100**\n   **Why:** **Not in Lahore** (location mismatch), but skills align well for **ML engineering** (Python, Scikit-Learn, deployment tools).\n   **Missing:** **Remote/local option** and **NLP-heavy focus** (PyTorch mentioned but not required).\n   **Apply:** [Example](https://example.com/2) *(Note: Not Lahore-based—prioritize local roles first.)*\n\n---\n\n### **Key Takeaways for Lahore Candidates:**\n1. **Top 3 picks** (#1–#3) are **perfect fits** for your skills and experience level.\n2. **Avoid #10** (SF-based) unless relocation is an option.\n3. **Senior roles (#6–#9)** may require **additional experience** in deployment/advanced ML.\n4. **Hire Feed** dominates the best matches—apply broadly to their ML/Data Science roles.\n\n**Next Steps:**\n- Tailor your resume to highlight **TF-IDF, Cosine Similarity, and Streamlit/FastAPI** for ML engineering roles.\n- For local roles (e.g., Recruitzz), emphasize **Lahore-based experience** if applicable.\n- If remote is acceptable, prioritize **Hire Feed’s ML Engineer (Remote)**.",
+  "cover_letters_generated": 0,
+  "jobs": [
+    {
+      "title": "ML Engineer",
+      "company": "AI Startup",
+      "url": "https://example.com/2",
+      "location": "San Francisco",
+      "description": "Job Title: ML Engineer | Company: AI Startup | Location: San Francisco | Description: PyTorch NLP production deployment. | Skills: Python, PyTorch, NLP",
+      "semantic_score": -36.8,
+      "score": 90,
+      "match_reason": "Strong alignment with **Machine Learning Engineer** role: Python, Scikit-Learn, Pandas, NumPy, Random Forest, Logistic Regression, and ML-specific tools (TF-IDF, Cosine Similarity) are highly relevant. Streamlit/FastAPI also support deployment and prototyping, critical for ML engineering.",
+      "final_score": 39.28,
+      "ai_score": 90
+    },
+    {
+      "title": "Machine Learning Engineer (Remote)",
+      "company": "Hire Feed",
+      "url": "https://pk.linkedin.com/jobs/view/machine-learning-engineer-remote-at-hire-feed-4434738409",
+      "location": "Pakistan",
+      "description": "Job Title: Machine Learning Engineer (Remote) | Company: Hire Feed | Location: Pakistan",
+      "semantic_score": -39.3,
+      "score": 90,
+      "match_reason": "Strong alignment with **Machine Learning Engineer** role: Python, Scikit-Learn, Pandas, NumPy, Random Forest, Logistic Regression, and TF-IDF/Cosine Similarity (NLP/feature engineering) are core ML skills. Streamlit/FastAPI add deployment/MLOps relevance.",
+      "final_score": 38.28,
+      "ai_score": 90
+    },
+    {
+      "title": "Machine Learning (AI) Engineer (Hybrid)",
+      "company": "Hire Feed",
+      "url": "https://pk.linkedin.com/jobs/view/machine-learning-ai-engineer-hybrid-at-hire-feed-4434724165",
+      "location": "Pakistan",
+      "description": "Job Title: Machine Learning (AI) Engineer (Hybrid) | Company: Hire Feed | Location: Pakistan",
+      "semantic_score": -31.8,
+      "score": 85,
+      "match_reason": "Strong alignment with **Machine Learning Engineer** role: Python, Scikit-Learn, Pandas, NumPy, Random Forest, Logistic Regression, and TF-IDF/Cosine Similarity (NLP/ML relevance) are core skills. Streamlit/FastAPI add deployment/MLOps value. Hybrid role fits ML Engineer scope.",
+      "final_score": 38.28,
+      "ai_score": 85
+    },
+    {
+      "title": "Artificial Intelligence Specialist",
+      "company": "Recruitzz",
+      "url": "https://pk.linkedin.com/jobs/view/artificial-intelligence-specialist-at-recruitzz-4431505029",
+      "location": "Lahore, Punjab, Pakistan",
+      "description": "Job Title: Artificial Intelligence Specialist | Company: Recruitzz | Location: Lahore, Punjab, Pakistan",
+      "semantic_score": -29.5,
+      "score": 75,
+      "match_reason": "Strong alignment with **Machine Learning Engineer** and **Data Scientist** roles due to Python, Scikit-Learn, Pandas, NumPy, Random Forest, Logistic Regression, TF-IDF, and Cosine Similarity. Streamlit/FastAPI add relevance for deployment/MLOps aspects.",
+      "final_score": 33.2,
+      "ai_score": 75
+    },
+    {
+      "title": "Data Scientist - AI/ML (Remote)",
+      "company": "Hire Feed",
+      "url": "https://pk.linkedin.com/jobs/view/data-scientist-ai-ml-remote-at-hire-feed-4434924820",
+      "location": "Pakistan",
+      "description": "Job Title: Data Scientist - AI/ML (Remote) | Company: Hire Feed | Location: Pakistan",
+      "semantic_score": -33.1,
+      "score": 75,
+      "match_reason": "Strong alignment with **Data Scientist** and **Machine Learning Engineer** roles. Skills like **Python, Scikit-Learn, Pandas, NumPy, Random Forest, Logistic Regression, TF-IDF Vectorization, and Cosine Similarity** directly map to ML/data science tasks. **Streamlit** and **FastAPI** add relevance for prototyping/deployment, though not core to all roles. High relevance for AI/ML-focused positions.",
+      "final_score": 31.76,
+      "ai_score": 75
+    },
+    {
+      "title": "Machine Learning Engineer - AI (Remote)",
+      "company": "Hire Feed",
+      "url": "https://pk.linkedin.com/jobs/view/machine-learning-engineer-ai-remote-at-hire-feed-4434725484",
+      "location": "Pakistan",
+      "description": "Job Title: Machine Learning Engineer - AI (Remote) | Company: Hire Feed | Location: Pakistan",
+      "semantic_score": -34.1,
+      "score": 75,
+      "match_reason": "Strong alignment with **Machine Learning Engineer** role: Python, Scikit-Learn, Pandas, NumPy, Random Forest, Logistic Regression, and TF-IDF/Cosine Similarity (NLP/ML relevance). Streamlit/FastAPI add deployment/MLOps value.",
+      "final_score": 31.36,
+      "ai_score": 75
+    },
+    {
+      "title": "Artificial Intelligence Engineer, LearnWith.AI (Remote) - $200,000/year USD",
+      "company": "Crossover",
+      "url": "https://pk.linkedin.com/jobs/view/artificial-intelligence-engineer-learnwith-ai-remote-%24200-000-year-usd-at-crossover-4431434060",
+      "location": "Rawalpindi, Punjab, Pakistan",
+      "description": "Job Title: Artificial Intelligence Engineer, LearnWith.AI (Remote) - $200,000/year USD | Company: Crossover | Location: Rawalpindi, Punjab, Pakistan",
+      "semantic_score": -34.5,
+      "score": 75,
+      "match_reason": "Strong alignment with **Machine Learning Engineer** and **MLOps Engineer** roles. Candidate's skills in **Python, Scikit-Learn, Pandas, NumPy, Random Forest, Logistic Regression, TF-IDF Vectorization, Cosine Similarity** align well with AI/ML development. **Streamlit/FastAPI** support deployment and tooling, while **remote/MLOps** overlap is plausible. High salary suggests senior-level relevance.",
+      "final_score": 31.2,
+      "ai_score": 75
+    },
+    {
+      "title": "Machine Learning Researcher (Remote)",
+      "company": "Hire Feed",
+      "url": "https://pk.linkedin.com/jobs/view/machine-learning-researcher-remote-at-hire-feed-4434488174",
+      "location": "Pakistan",
+      "description": "Job Title: Machine Learning Researcher (Remote) | Company: Hire Feed | Location: Pakistan",
+      "semantic_score": -34.5,
+      "score": 75,
+      "match_reason": "Strong alignment with **Machine Learning Engineer** and **Data Scientist** roles. Skills like Python, Scikit-Learn, Random Forest, Logistic Regression, TF-IDF, and Cosine Similarity are highly relevant for ML research. Streamlit/FastAPI add deployment/MLOps potential, though not core to this role.",
+      "final_score": 31.2,
+      "ai_score": 75
+    },
+    {
+      "title": "Senior AI/ML Engineer",
+      "company": "Funavry Technologies",
+      "url": "https://pk.linkedin.com/jobs/view/senior-ai-ml-engineer-at-funavry-technologies-4434964117",
+      "location": "Islamabad, Islāmābād, Pakistan",
+      "description": "Job Title: Senior AI/ML Engineer | Company: Funavry Technologies | Location: Islamabad, Islāmābād, Pakistan",
+      "semantic_score": -44.7,
+      "score": 75,
+      "match_reason": "Strong alignment with **Machine Learning Engineer** and **MLOps Engineer** roles. Candidate's skills (Python, Scikit-Learn, Pandas, NumPy, Random Forest, Logistic Regression, TF-IDF, Cosine Similarity) directly match core ML tasks. Streamlit/FastAPI also support deployment and tooling, relevant for MLOps.",
+      "final_score": 27.12,
+      "ai_score": 75
+    },
+    {
+      "title": "Member of Technical Staff - AI Engineering (Remote)",
+      "company": "Hire Feed",
+      "url": "https://pk.linkedin.com/jobs/view/member-of-technical-staff-ai-engineering-remote-at-hire-feed-4434707579",
+      "location": "Pakistan",
+      "description": "Job Title: Member of Technical Staff - AI Engineering (Remote) | Company: Hire Feed | Location: Pakistan",
+      "semantic_score": -45.0,
+      "score": 75,
+      "match_reason": "Strong alignment with **Machine Learning Engineer** and **MLOps Engineer** roles due to Python, Scikit-Learn, Pandas, NumPy, Random Forest, Logistic Regression, and TF-IDF/Cosine Similarity expertise. Streamlit/FastAPI support deployment and tooling, while remote flexibility matches the role's requirements.",
+      "final_score": 27.0,
+      "ai_score": 75
+    }
+  ],
+  "semantic_search_used": true,
+  "vector_db_jobs": 50
+}
