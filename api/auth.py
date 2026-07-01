@@ -45,7 +45,7 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
     except JWTError:
         raise credentials_exception
 
-    # ⚡ FIX: Search by email OR username!
+# Search by email OR username!
     user = db.query(User).filter(
         (User.email == user_identifier) | 
         (User.username == user_identifier)
