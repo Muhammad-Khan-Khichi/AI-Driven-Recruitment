@@ -25,7 +25,7 @@ class User(Base):
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime, default=datetime.utcnow)
 
-    # ✅ All three relationships defined
+    # All three relationships defined
     resumes = relationship("Resume", back_populates="user", cascade="all, delete-orphan")
     searches = relationship("JobSearch", back_populates="user", cascade="all, delete-orphan")
     applications = relationship("Application", back_populates="user", cascade="all, delete-orphan")
@@ -37,7 +37,7 @@ class Resume(Base):
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"))
     filename = Column(String, nullable=False)
-    file_path = Column(String, nullable=False)
+    file_path = Column(String, nullable=True)  
     parsed_text = Column(Text)
     extracted_skills = Column(Text)
     extracted_roles = Column(Text)
