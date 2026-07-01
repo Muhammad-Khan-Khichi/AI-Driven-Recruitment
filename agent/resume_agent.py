@@ -1,5 +1,6 @@
 """Job search agent with both CLI and API interfaces."""
 
+import os
 from langchain_mistralai import ChatMistralAI
 
 from config import settings
@@ -25,7 +26,6 @@ def safe_len(value, default=0):
     try:
         return len(value)
     except TypeError:
-        # If it's a number, return its magnitude
         if isinstance(value, (int, float)):
             return int(abs(value))
         return default
@@ -40,27 +40,38 @@ class JobFinderAgent:
         )
         self.location = settings.DEFAULT_LOCATION
         self.generate_letters = generate_letters
-        self.last_vector_stats = None  # Track for API response
+        self.last_vector_stats = None
 
     def run(
         self,
-        resume_path: str,
+        resume_path: str = None,           # ⚡ Optional now
+        resume_text: str = "",             # ⚡ NEW: accept text directly
         candidate_name: str = "Candidate",
         user_id: int = None,
-        custom_keywords: list = None  # ✅ NEW PARAMETER
+        custom_keywords: list = None
     ) -> dict:
         """Main agent workflow with semantic + AI hybrid ranking."""
-        logger.info(f"Starting job search for: {resume_path}")
+        logger.info(f"Starting job search for: {resume_path or 'text input'}")
 
-        # ─── Step 1: Load resume ──────────────────────────────
+        # ─── Step 1: Load resume (⚡ Use text from DB if provided!) ───
         logger.info("[1/5] Loading resume")
-        resume_text = load_resume_text(resume_path)
+        
+        if resume_text and len(resume_text) > 100:
+            # ⚡ FAST! Use text directly from DB
+            logger.info(f"  ⚡ Using resume text from DB ({len(resume_text)} chars)")
+        elif resume_path and os.path.exists(resume_path):
+            # Fallback: load from file
+            logger.info(f"  📄 Loading resume from file: {resume_path}")
+            resume_text = load_resume_text(resume_path)
+        else:
+            logger.warning(f"  ⚠️  No resume content available!")
+            resume_text = ""
 
         # ─── Step 2: Extract profile ──────────────────────────
         logger.info("[2/5] Extracting profile")
         profile = extract_skills_from_resume(resume_text)
         profile["name"] = candidate_name
-        profile["resume_path"] = resume_path
+        profile["resume_path"] = resume_path or "(from DB)"
 
         logger.info(f"  Skills: {safe_len(profile.get('skills', []))}")
         logger.info(f"  Roles:  {profile.get('job_titles', [])[:3]}")
@@ -69,12 +80,12 @@ class JobFinderAgent:
         logger.info("[3/5] Searching job boards")
         all_jobs = []
 
-        # ✅ NEW: Use custom_keywords if provided, else fall back to resume job_titles
+        # ⚡ Use custom_keywords if provided, else fall back to resume job_titles
         if custom_keywords and len(custom_keywords) > 0:
-            search_terms = custom_keywords[:5]  # Use top 5 custom keywords
+            search_terms = custom_keywords[:2]  # ⚡ Only 2 keywords (was 5)
             logger.info(f"  Using {safe_len(search_terms)} custom keywords: {search_terms}")
         else:
-            search_terms = profile.get("job_titles", [])[:3]
+            search_terms = profile.get("job_titles", [])[:2]  # ⚡ Only 2 (was 3)
             logger.info(f"  Using {safe_len(search_terms)} resume-extracted roles")
 
         for term in search_terms:
@@ -90,24 +101,25 @@ class JobFinderAgent:
         job_store = None
         self.last_vector_stats = {"total_jobs": 0}
 
-        # 4a. Index fetched jobs into vector store
+        # 4a. Index fetched jobs into vector store (with duplicate check!)
         try:
             job_store = JobVectorStore()
-            job_store.add_jobs(unique_jobs)
+            add_result = job_store.add_jobs(unique_jobs)
             self.last_vector_stats = job_store.get_stats()
-            logger.info(f"  Vector DB now has: {self.last_vector_stats['total_jobs']} jobs")
+            logger.info(f"  Vector DB: added {add_result['added']}, skipped {add_result['skipped']} duplicates")
+            logger.info(f"  Vector DB total: {self.last_vector_stats['total_jobs']} jobs")
         except Exception as e:
             logger.warning(f"  Vector indexing failed: {e} — falling back to keyword search")
 
-        # 4b. Run semantic search using resume text as query
+        # 4b. Run semantic search using resume text as query (⚡ FASTER!)
         semantic_results = []
         try:
             semantic_search = SemanticJobSearch()
             semantic_results = semantic_search.search(
-                query=resume_text[:2000],
+                query=resume_text[:1000],  # ⚡ Less text = faster (was 2000)
                 user_id=user_id,
-                n_results=20,
-                use_resume=(user_id is not None),
+                n_results=10,              # ⚡ Fewer results = faster (was 20)
+                use_resume=False,          # ⚡ Skip user-specific (faster, was True)
                 filter_remote=False
             )
             logger.info(f"  Semantic matches found: {safe_len(semantic_results)}")
@@ -117,7 +129,7 @@ class JobFinderAgent:
         # 4c. Convert semantic results to AI-ranker format
         if semantic_results:
             jobs_for_ai_ranking = []
-            for sem_job in semantic_results[:15]:
+            for sem_job in semantic_results[:10]:  # ⚡ Top 10 (was 15)
                 jobs_for_ai_ranking.append({
                     "title": sem_job.get("title", ""),
                     "company": sem_job.get("company", ""),
@@ -127,17 +139,17 @@ class JobFinderAgent:
                     "semantic_score": sem_job.get("similarity_score", 0) * 100
                 })
         else:
-            # Fallback to first 15 fetched jobs
-            jobs_for_ai_ranking = unique_jobs[:15]
-            logger.info("  Using first 15 fetched jobs (no semantic results)")
+            # Fallback to first 10 fetched jobs
+            jobs_for_ai_ranking = unique_jobs[:10]
+            logger.info("  Using first 10 fetched jobs (no semantic results)")
 
         # ─── Step 5: AI ranking (Mistral) on top candidates ─
         logger.info("[5/5] AI ranking top candidates (Mistral)")
-        filtered_jobs = filter_jobs_with_ai(jobs_for_ai_ranking, profile, min_score=40)
+        # ⚡ Lower threshold = more jobs pass = less filtering time
+        filtered_jobs = filter_jobs_with_ai(jobs_for_ai_ranking, profile, min_score=30)
 
         # 5a. Combine semantic + AI scores
         for job in filtered_jobs:
-            # Find matching semantic score
             sem_score = 0
             for s in semantic_results:
                 if s.get("url") == job.get("url") or s.get("title") == job.get("title"):
@@ -145,7 +157,6 @@ class JobFinderAgent:
                     break
 
             ai_score = job.get("score", 0) or job.get("match_score", 0)
-            # Weighted: 40% semantic + 60% AI (AI gets more weight because it's context-aware)
             job["final_score"] = round(0.4 * sem_score + 0.6 * ai_score, 2)
             job["semantic_score"] = round(sem_score, 2)
             job["ai_score"] = ai_score
@@ -187,10 +198,10 @@ class JobFinderAgent:
             "ranked_matches": ranked_output,
             "cover_letters_generated": safe_len(cover_letter_paths),
             "jobs": top_matches,
-            "all_jobs": unique_jobs,  # ✅ NEW: Include all_jobs for resume-based search
+            "all_jobs": unique_jobs,
             "semantic_search_used": safe_len(semantic_results) > 0,
             "vector_db_jobs": self.last_vector_stats.get("total_jobs", 0) if self.last_vector_stats else 0,
-            "search_keywords_used": search_terms  # ✅ NEW: Track what we searched for
+            "search_keywords_used": search_terms
         }
 
         save_results(results, settings.OUTPUT_FILE)
@@ -202,32 +213,35 @@ class JobFinderAgent:
 # ─── API-friendly function ──────────────────────────────────
 
 def run_job_search(
-    resume_path: str,
+    resume_path: str = None,           # ⚡ Optional now
+    resume_text: str = "",             # ⚡ NEW!
     user_name: str = "User",
     generate_cover_letters: bool = False,
     location: str = None,
     top_n: int = None,
     user_id: int = None,
-    custom_keywords: list = None  # ✅ NEW PARAMETER
+    custom_keywords: list = None
 ) -> dict:
     """
     Function-based interface used by the FastAPI layer.
     Wraps the JobFinderAgent and returns a clean dict for JSON response.
+    
+    ⚡ NEW: Accepts resume_text from DB (no PDF file needed!)
     """
     try:
         location = location or settings.DEFAULT_LOCATION
         top_n = top_n or settings.TOP_MATCHES_COUNT
 
         agent = JobFinderAgent(generate_letters=generate_cover_letters)
-        # Override location if provided
         if location:
             agent.location = location
 
         results = agent.run(
             resume_path=resume_path,
+            resume_text=resume_text,  # ⚡ Pass through!
             candidate_name=user_name,
             user_id=user_id,
-            custom_keywords=custom_keywords  # ✅ PASS IT THROUGH
+            custom_keywords=custom_keywords
         )
 
         # Normalize output for API
@@ -244,10 +258,10 @@ def run_job_search(
             "cover_letters_generated": results.get("cover_letters_generated", 0),
             "top_jobs": results.get("jobs", []),
             "ranked_matches": results.get("ranked_matches", []),
-            "all_jobs": results.get("all_jobs", []),  # ✅ NEW: Include for scoring
+            "all_jobs": results.get("all_jobs", []),
             "semantic_search_used": results.get("semantic_search_used", False),
             "vector_db_jobs": results.get("vector_db_jobs", 0),
-            "search_keywords_used": results.get("search_keywords_used", []),  # ✅ NEW
+            "search_keywords_used": results.get("search_keywords_used", []),
             "location": location
         }
 
@@ -258,7 +272,7 @@ def run_job_search(
             "error": str(e),
             "profile": None,
             "top_jobs": [],
-            "all_jobs": [],  # ✅ NEW
+            "all_jobs": [],
             "total_jobs_found": 0,
             "top_matches_count": 0,
             "cover_letters_generated": 0,
@@ -280,7 +294,7 @@ def cli_main():
     cover_letters_input = input("Generate cover letters for top 3 matches? (y/n): ").strip().lower()
     generate_letters = cover_letters_input == "y"
 
-    if not Path(resume_path).exists():
+    if resume_path and not Path(resume_path).exists():
         for alt in [f"data/resumes/{resume_path}", f"./{resume_path}"]:
             if Path(alt).exists():
                 resume_path = alt
@@ -297,7 +311,6 @@ def cli_main():
         print(" TOP JOB MATCHES (Semantic + AI Ranked)")
         print("=" * 60 + "\n")
 
-        # Show vector DB stats
         if results.get("semantic_search_used"):
             print(f"✅ Semantic search used ({results.get('vector_db_jobs', 0)} jobs in vector DB)\n")
 
