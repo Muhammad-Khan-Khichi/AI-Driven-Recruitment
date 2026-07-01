@@ -1,5 +1,4 @@
-"""
-Vector Store using ChromaDB for semantic job search.
+"""Vector Store using ChromaDB for semantic job search.
 Embeds jobs and resumes using sentence-transformers.
 """
 import os
@@ -61,7 +60,7 @@ def embed_texts(texts: List[str]) -> List[List[float]]:
 
 
 class JobVectorStore:
-    """Vector store for job postings."""
+    """Vector store for job postings with duplicate detection."""
     
     def __init__(self):
         self.client = get_chroma_client()
@@ -70,20 +69,65 @@ class JobVectorStore:
             metadata={"description": "Job postings for semantic search"}
         )
     
-    def add_jobs(self, jobs: List[Dict]) -> int:
+    def _get_existing_urls(self) -> set:
+        """Get all existing job URLs from database."""
+        try:
+            all_jobs = self.collection.get()
+            urls = set()
+            for metadata in all_jobs.get("metadatas", []):
+                if metadata and "url" in metadata:
+                    urls.add(metadata["url"])
+            return urls
+        except Exception:
+            return set()
+    
+    def _get_existing_ids(self) -> set:
+        """Get all existing job IDs from database."""
+        try:
+            all_jobs = self.collection.get()
+            return set(all_jobs.get("ids", []))
+        except Exception:
+            return set()
+    
+    def _make_job_id(self, job: Dict) -> str:
+        """Generate unique ID for a job based on URL or title+company."""
+        url = job.get("url") or job.get("link") or ""
+        if url:
+            # Use URL hash for consistent ID
+            return f"job_{hash(url) % 10**10}"
+        
+        # Fallback: title + company
+        title = job.get("title", "")
+        company = job.get("company", "")
+        return f"job_{hash(f'{title}_{company}') % 10**10}"
+    
+    def add_jobs(self, jobs: List[Dict]) -> Dict[str, int]:
         """
-        Add jobs to vector store.
-        Each job dict: {id, title, company, description, location, ...}
+        Add jobs to vector store with duplicate detection.
+        Returns dict with 'added' and 'skipped' counts.
         """
         if not jobs:
-            return 0
+            return {"added": 0, "skipped": 0}
         
-        # Prepare documents (what gets embedded)
+        # Get existing IDs to check for duplicates
+        existing_ids = self._get_existing_ids()
+        
+        # Prepare documents, embeddings, and metadata
         documents = []
         metadatas = []
         ids = []
         
+        skipped_count = 0
+        
         for job in jobs:
+            # Generate unique ID
+            job_id = self._make_job_id(job)
+            
+            # ← DUPLICATE CHECK! Skip if already exists
+            if job_id in existing_ids:
+                skipped_count += 1
+                continue
+            
             # Create rich text representation for embedding
             doc_text = self._job_to_text(job)
             documents.append(doc_text)
@@ -105,12 +149,12 @@ class JobVectorStore:
                 metadata["salary_max"] = float(job["salary_max"])
             
             metadatas.append(metadata)
-            
-            # Use job ID (or generate one)
-            job_id = str(job.get("id") or f"job_{hash(doc_text) % 10**8}")
             ids.append(job_id)
         
-        # Embed and add in batch
+        # Embed and add in batch (only non-duplicates!)
+        if not ids:
+            return {"added": 0, "skipped": skipped_count}
+        
         embeddings = embed_texts(documents)
         
         self.collection.add(
@@ -120,7 +164,9 @@ class JobVectorStore:
             ids=ids
         )
         
-        return len(jobs)
+        added_count = len(ids)
+        
+        return {"added": added_count, "skipped": skipped_count}
     
     def search_jobs(
         self,
@@ -167,15 +213,6 @@ class JobVectorStore:
                     "document": results["documents"][0][i] if "documents" in results else ""
                 })
         
-        # Optional: filter by salary
-        if min_salary is not None:
-            filtered = []
-            for job in jobs:
-                # Get metadata salary (we'd need to fetch it separately)
-                # For now, skip this filter
-                filtered.append(job)
-            jobs = filtered
-        
         return jobs
     
     def get_stats(self) -> Dict:
@@ -194,6 +231,27 @@ class JobVectorStore:
             name=JOBS_COLLECTION,
             metadata={"description": "Job postings for semantic search"}
         )
+    
+    def dedupe(self) -> int:
+        """Remove duplicate jobs from vector store."""
+        all_jobs = self.collection.get()
+        
+        if not all_jobs["ids"]:
+            return 0
+        
+        seen_ids = set()
+        duplicates_to_delete = []
+        
+        for job_id in all_jobs["ids"]:
+            if job_id in seen_ids:
+                duplicates_to_delete.append(job_id)
+            else:
+                seen_ids.add(job_id)
+        
+        if duplicates_to_delete:
+            self.collection.delete(ids=duplicates_to_delete)
+        
+        return len(duplicates_to_delete)
     
     @staticmethod
     def _job_to_text(job: Dict) -> str:
