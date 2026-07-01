@@ -1,8 +1,9 @@
 import json
 import os
+import tempfile
 import shutil
 from typing import Optional, List
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Query
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Query, BackgroundTasks
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
 
@@ -11,11 +12,12 @@ from .auth import get_current_user
 from agent.resume_agent import run_job_search
 from agent.filter_tools import filter_jobs
 
-
 router = APIRouter(prefix="/api/jobs", tags=["Jobs"])
 
 
-#Request Models
+# ============================================================
+# Request Models
+# ============================================================
 class JobSearchRequest(BaseModel):
     location: Optional[str] = None
     generate_cover_letters: bool = False
@@ -51,50 +53,70 @@ class FilterRequest(BaseModel):
     keywords_excluded: Optional[List[str]] = None
 
 
-#Resume Upload
+# ============================================================
+# Resume Upload (NO PDF SAVED - TEXT ONLY!)
+# ============================================================
 @router.post("/upload-resume")
 def upload_resume(
     file: UploadFile = File(...),
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """Upload and parse resume PDF."""
+    """
+    Upload and parse resume PDF.
+    ⚡ NEW: Saves text to DB only - PDF is deleted after extraction!
+    """
     if not file.filename.endswith(".pdf"):
         raise HTTPException(status_code=400, detail="Only PDF files allowed")
 
-    upload_dir = "data/resumes"
-    os.makedirs(upload_dir, exist_ok=True)
-    file_path = os.path.join(upload_dir, f"user_{current_user.id}_{file.filename}")
+    # Read file content
+    content = file.file.read()
+    
+    # Save to TEMP file (auto-deleted after extraction)
+    suffix = os.path.splitext(file.filename)[1] or ".pdf"
+    
+    with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
+        tmp.write(content)
+        tmp_path = tmp.name
 
-    with open(file_path, "wb") as f:
-        shutil.copyfileobj(file.file, f)
+    try:
+        # Extract text + skills
+        from tools.resume_tools import load_resume_text, extract_skills_from_resume
+        
+        text = load_resume_text(tmp_path)
+        profile = extract_skills_from_resume(text)
 
-    from tools.resume_tools import load_resume_text, extract_skills_from_resume
-    text = load_resume_text(file_path)
-    profile = extract_skills_from_resume(text)
+        # Save to DB (NO file_path - just text!)
+        resume = Resume(
+            user_id=current_user.id,
+            filename=file.filename,
+            file_path=None,  # ⚡ Don't save path!
+            parsed_text=text[:5000],  # ⚡ Text saved directly to DB
+            extracted_skills=json.dumps(profile.get("skills", [])),
+            extracted_roles=json.dumps(profile.get("job_titles", []))
+        )
+        db.add(resume)
+        db.commit()
+        db.refresh(resume)
 
-    resume = Resume(
-        user_id=current_user.id,
-        filename=file.filename,
-        file_path=file_path,
-        parsed_text=text[:5000],
-        extracted_skills=json.dumps(profile.get("skills", [])),
-        extracted_roles=json.dumps(profile.get("job_titles", []))
-    )
-    db.add(resume)
-    db.commit()
-    db.refresh(resume)
-
-    return {
-        "resume_id": resume.id,
-        "filename": file.filename,
-        "skills": profile.get("skills", []),
-        "roles": profile.get("job_titles", []),
-        "parsed_chars": len(text)
-    }
+        return {
+            "resume_id": resume.id,
+            "filename": file.filename,
+            "skills": profile.get("skills", []),
+            "roles": profile.get("job_titles", []),
+            "parsed_chars": len(text),
+            "message": f"✅ Extracted {len(profile.get('skills', []))} skills (no PDF saved!)"
+        }
+    finally:
+        # ⚡ Always delete temp file
+        if os.path.exists(tmp_path):
+            os.unlink(tmp_path)
+            print(f"🗑️  Deleted temp file: {tmp_path}")
 
 
-#Job Search (POST)
+# ============================================================
+# Job Search (POST) - UPDATED to use parsed_text
+# ============================================================
 @router.post("/search")
 def search_jobs(
     request: JobSearchRequest,
@@ -106,13 +128,14 @@ def search_jobs(
     if not resume:
         raise HTTPException(status_code=400, detail="Upload a resume first")
 
-    # Find the search_jobs endpoint and update:
+    # ⚡ Use parsed_text from DB (no need for file!)
     results = run_job_search(
-        resume_path=resume.file_path,
+        resume_text=resume.parsed_text or "",  # ⚡ Use DB text
+        resume_path=resume.file_path,           # Backup
         user_name=current_user.full_name or current_user.username,
         generate_cover_letters=request.generate_cover_letters,
         location=request.location or current_user.location,
-        user_id=current_user.id  # Pass user_id for resume vector storage
+        user_id=current_user.id
     )
 
     search = JobSearch(
@@ -128,7 +151,9 @@ def search_jobs(
     return results
 
 
-#Search History
+# ============================================================
+# Search History
+# ============================================================
 @router.get("/history")
 def get_search_history(
     current_user: User = Depends(get_current_user),
@@ -149,7 +174,9 @@ def get_search_history(
     ]
 
 
-#Applications
+# ============================================================
+# Applications
+# ============================================================
 @router.post("/applications")
 def track_application(
     request: ApplicationRequest,
@@ -229,7 +256,9 @@ def update_application(
     return {"id": app.id, "status": app.status, "notes": app.notes}
 
 
-#Smart Filtering
+# ============================================================
+# Smart Filtering
+# ============================================================
 @router.post("/filter")
 async def filter_jobs_endpoint(req: FilterRequest):
     """Apply smart filters to a list of jobs."""
@@ -257,7 +286,7 @@ async def filter_jobs_endpoint(req: FilterRequest):
 
 
 # ============================================================
-#  Resume-Based Job Search (NEW!)
+# Resume-Based Job Search (FASTER - 2 keywords!)
 # ============================================================
 @router.post("/search-by-resume")
 def search_jobs_by_resume(
@@ -268,14 +297,10 @@ def search_jobs_by_resume(
     """
     Search for jobs using keywords extracted from user's resume.
 
-    Workflow:
-    1. Get user's resume (specific or latest)
-    2. Extract skills from resume.extracted_skills
-    3. Generate smart search keyword combinations
-    4. Run job search for each keyword combination
-    5. Score each job against resume skills
-    6. Sort by match score (highest first)
-    7. Filter by min_match_score
+    ⚡ OPTIMIZED:
+    - Uses parsed_text from DB (no PDF file needed!)
+    - Only 2 keyword searches (was 5)
+    - LinkedIn-only (no Adzuna/Jooble)
     """
     # Step 1: Get resume
     if request.resume_id:
@@ -304,7 +329,6 @@ def search_jobs_by_resume(
             elif isinstance(skills_data, dict):
                 resume_skills = skills_data.get("skills", [])
         except (json.JSONDecodeError, TypeError):
-            # Fallback: parse as comma-separated
             resume_skills = [
                 s.strip() for s in resume.extracted_skills.split(",") if s.strip()
             ]
@@ -318,20 +342,21 @@ def search_jobs_by_resume(
     # Step 3: Generate smart search keywords
     search_keywords = generate_search_keywords(resume_skills)
 
-    # Step 4: Run job search for each keyword
+    # Step 4: Run job search for each keyword (⚡ ONLY 2 KEYWORDS!)
     all_jobs = []
     search_results = []
 
-    for keyword in search_keywords[:3]:  # Top 3 keyword combos
+    for keyword in search_keywords[:2]:  # ⚡ Only 2 keywords (was 5)
         try:
-            # Use your existing run_job_search agent!
+            # ⚡ Use parsed_text from DB!
             results = run_job_search(
+                resume_text=resume.parsed_text or "",
                 resume_path=resume.file_path,
                 user_name=current_user.full_name or current_user.username,
-                generate_cover_letters=False,  # Skip for speed
+                generate_cover_letters=False,
                 location=request.location or current_user.location,
                 user_id=current_user.id,
-                custom_keywords=[keyword]  # ✅ Pass single keyword as list
+                custom_keywords=[keyword]
             )
 
             jobs = results.get("all_jobs", [])
@@ -344,14 +369,14 @@ def search_jobs_by_resume(
             print(f"Search failed for '{keyword}': {e}")
             continue
 
-    # Remove duplicates (same title + company)
+    # Remove duplicates
     seen = set()
     unique_jobs = []
     for job in all_jobs:
         title = (job.get("title") or "").lower().strip()
         company = (job.get("company") or "").lower().strip()
         key = f"{title}|{company}"
-        if key not in seen and title:  # Must have title
+        if key not in seen and title:
             seen.add(key)
             unique_jobs.append(job)
 
@@ -364,7 +389,7 @@ def search_jobs_by_resume(
             job_copy = dict(job)
             job_copy["match_score"] = score
             job_copy["matched_skills"] = matched
-            job_copy["missing_skills"] = missing[:5]  # Top 5 missing
+            job_copy["missing_skills"] = missing[:5]
             scored_jobs.append(job_copy)
 
     # Step 6: Sort by match score
@@ -378,8 +403,8 @@ def search_jobs_by_resume(
         user_id=current_user.id,
         resume_id=resume.id,
         location=request.location or current_user.location,
-        jobs_found=json.dumps(final_jobs[:50]),  # Save top 50
-        top_matches=json.dumps(final_jobs[:10])   # Save top 10
+        jobs_found=json.dumps(final_jobs[:50]),
+        top_matches=json.dumps(final_jobs[:10])
     )
     db.add(search)
     db.commit()
@@ -395,28 +420,25 @@ def search_jobs_by_resume(
     }
 
 
+# ============================================================
+# Helper Functions
+# ============================================================
 def generate_search_keywords(skills: List[str]) -> List[str]:
     """
     Generate smart search keyword combinations from resume skills.
-
-    Examples:
-    ["Python", "FastAPI", "AWS", "Docker"] →
-    ["Python FastAPI", "Python Developer", "FastAPI AWS", "Python AWS Docker"]
     """
     keywords = []
-
-    # Clean skills
     clean_skills = [s.strip() for s in skills if s and s.strip()]
 
     if not clean_skills:
         return []
 
-    # Single skill searches (top 3 skills)
-    for skill in clean_skills[:3]:
+    # Single skill searches (top 2 skills only - was 3)
+    for skill in clean_skills[:2]:
         keywords.append(f"{skill} Developer")
         keywords.append(f"{skill} Engineer")
 
-    # Two-skill combinations (top 2 skills)
+    # Two-skill combinations
     if len(clean_skills) >= 2:
         keywords.append(f"{clean_skills[0]} {clean_skills[1]}")
         keywords.append(f"{clean_skills[0]} {clean_skills[1]} Developer")
@@ -425,7 +447,7 @@ def generate_search_keywords(skills: List[str]) -> List[str]:
     if len(clean_skills) >= 3:
         keywords.append(f"{clean_skills[0]} {clean_skills[1]} {clean_skills[2]}")
 
-    # Remove duplicates and empty strings
+    # Remove duplicates
     seen = set()
     unique = []
     for kw in keywords:
@@ -440,11 +462,7 @@ def generate_search_keywords(skills: List[str]) -> List[str]:
 def score_job_against_skills(job: dict, resume_skills: List[str]) -> tuple:
     """
     Score how well a job matches the resume skills.
-
-    Returns:
-        (score: int 0-100, matched_skills: List[str], missing_skills: List[str])
     """
-    # Combine all job text for matching
     job_text_parts = [
         job.get("title", "") or "",
         job.get("description", "") or "",
@@ -453,7 +471,6 @@ def score_job_against_skills(job: dict, resume_skills: List[str]) -> tuple:
     ]
     job_text = " ".join(job_text_parts).lower()
 
-    # Normalize resume skills
     resume_skills_clean = [s.lower().strip() for s in resume_skills if s and s.strip()]
 
     matched = []
@@ -465,20 +482,18 @@ def score_job_against_skills(job: dict, resume_skills: List[str]) -> tuple:
         else:
             missing.append(skill)
 
-    # Calculate base score
     if not resume_skills_clean:
         return 0, [], []
 
     score = int((len(matched) / len(resume_skills_clean)) * 100)
 
-    # Bonus: skill in job title (10% boost)
+    # Bonus: skill in job title
     job_title_lower = (job.get("title", "") or "").lower()
     for skill in resume_skills_clean:
         if skill in job_title_lower:
             score += 10
             break
 
-    # Cap at 100
     score = min(score, 100)
 
     return score, matched, missing
