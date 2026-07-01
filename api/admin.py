@@ -16,10 +16,10 @@ class UserOut(BaseModel):
     id: int
     username: str
     email: str
-    full_name: Optional[str] = None    # ← Make optional
+    full_name: Optional[str] = None 
     is_admin: bool = False
     is_active: bool = True
-    created_at: Optional[datetime] = None    # ✅ Fix!
+    created_at: Optional[datetime] = None   
 
     class Config:
         from_attributes = True
