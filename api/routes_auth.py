@@ -57,20 +57,26 @@ def signup(request: SignupRequest, db: Session = Depends(get_db)):
 
 @router.post("/login", response_model=TokenResponse)
 def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-    user = db.query(User).filter(User.username == form_data.username).first()
-
+    # ⚡ Accept email OR username!
+    user = db.query(User).filter(
+        (User.email == form_data.username) | 
+        (User.username == form_data.username)
+    ).first()
+    
     if not user or not verify_password(form_data.password, user.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password"
+            detail="Incorrect email/username or password"
         )
-
-    token = create_access_token(data={"sub": user.username})
+    
+    # ⚡ Use email in token (more reliable!)
+    token = create_access_token(data={"sub": user.email})
     return {
         "access_token": token,
         "token_type": "bearer",
         "user_id": user.id,
-        "username": user.username
+        "username": user.username,
+        "email": user.email  # ← Return email
     }
 
 
@@ -93,3 +99,29 @@ def logout(current_user: User = Depends(get_current_user)):
     # With JWT, logout is client-side (delete token)
     # But we can blacklist here if needed
     return {"message": "Logged out successfully"}
+
+
+class LoginJSONRequest(BaseModel):
+    email: str
+    password: str
+
+@router.post("/login-json")
+def login_json(request: LoginJSONRequest, db: Session = Depends(get_db)):
+    """Login with JSON body - clean email/password fields!"""
+    user = db.query(User).filter(User.email == request.email).first()
+    
+    if not user or not verify_password(request.password, user.hashed_password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect email or password"
+        )
+    
+    token = create_access_token(data={"sub": user.email})
+    return {
+        "access_token": token,
+        "token_type": "bearer",
+        "user_id": user.id,
+        "username": user.username,
+        "email": user.email,
+        "is_admin": bool(user.is_admin)
+    }
