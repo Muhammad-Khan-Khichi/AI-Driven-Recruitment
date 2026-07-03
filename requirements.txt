@@ -17,3 +17,4 @@ python-multipart
 rank-bm25
 requests
 sentence-transformers
+mistralai>=1.0.0
