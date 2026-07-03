@@ -1,8 +1,9 @@
+# database/db.py
+
 import os
 from datetime import datetime
-from sqlalchemy import create_engine, Column, Integer, String, Text, Float, DateTime, ForeignKey, Boolean
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, relationship
+from sqlalchemy import create_engine, Column, Integer, String, Text, Float, DateTime, ForeignKey, Boolean, JSON
+from sqlalchemy.orm import declarative_base, sessionmaker, relationship
 
 DB_PATH = os.path.join(os.path.dirname(__file__), "jobsearcher.db")
 DATABASE_URL = f"sqlite:///{DB_PATH}"
@@ -25,10 +26,20 @@ class User(Base):
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime, default=datetime.utcnow)
 
-    # All three relationships defined
+    password_resets = relationship(
+        "PasswordReset",
+        back_populates="user",
+        cascade="all, delete-orphan"
+    )
+
     resumes = relationship("Resume", back_populates="user", cascade="all, delete-orphan")
     searches = relationship("JobSearch", back_populates="user", cascade="all, delete-orphan")
     applications = relationship("Application", back_populates="user", cascade="all, delete-orphan")
+    cover_letters = relationship("CoverLetter", back_populates="user", cascade="all, delete-orphan")
+
+    oauth_provider = Column(String, nullable=True)
+    oauth_id = Column(String, nullable=True)
+    profile_picture = Column(String, nullable=True)
 
 
 class Resume(Base):
@@ -37,7 +48,7 @@ class Resume(Base):
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"))
     filename = Column(String, nullable=False)
-    file_path = Column(String, nullable=True)  
+    file_path = Column(String, nullable=True)
     parsed_text = Column(Text)
     extracted_skills = Column(Text)
     extracted_roles = Column(Text)
@@ -76,14 +87,72 @@ class Application(Base):
     user = relationship("User", back_populates="applications")
 
 
+class CoverLetter(Base):
+    __tablename__ = "cover_letters"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    resume_id = Column(Integer, ForeignKey("resumes.id"), nullable=True)
+    
+    job_title = Column(String, nullable=False)
+    company = Column(String, nullable=False)
+    job_description = Column(Text)
+    job_url = Column(String)
+    
+    variants = Column(JSON)
+    selected_variant = Column(Integer)
+    final_text = Column(Text)
+    
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    user = relationship("User", back_populates="cover_letters")
+    resume = relationship("Resume")
+    
+    def __repr__(self):
+        return f"<CoverLetter {self.id}: {self.job_title} at {self.company}>"
+
+
+# ✅ PasswordReset defined HERE (after Base, before other models that reference it)
+class PasswordReset(Base):
+    __tablename__ = "password_resets"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    
+    token = Column(String, unique=True, index=True, nullable=False)
+    expires_at = Column(DateTime, nullable=False)
+    used = Column(Boolean, default=False)
+    
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
+    user = relationship("User", back_populates="password_resets")
+    
+    def __repr__(self):
+        return f"<PasswordReset user_id={self.user_id}>"
+    
+    def is_valid(self):
+        """Check if token is still valid"""
+        return (
+            not self.used 
+            and datetime.utcnow() < self.expires_at
+        )
+
+
 # Create tables
 Base.metadata.create_all(bind=engine)
 
 
 def get_db():
-    """FastAPI dependency that yields a DB session and closes it after."""
     db = SessionLocal()
     try:
         yield db
     finally:
         db.close()
+
+
+__all__ = [
+    "Base", "engine", "SessionLocal", "get_db",
+    "User", "Resume", "JobSearch", "Application",
+    "CoverLetter", "PasswordReset"
+]
