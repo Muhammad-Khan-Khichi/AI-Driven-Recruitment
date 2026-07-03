@@ -26,7 +26,7 @@ class Settings(BaseSettings):
     SMTP_PORT: int = 587
     
     # ✅ Frontend (NEW)
-    FRONTEND_URL: str = "http://localhost:3000"
+    FRONTEND_URL: str = "http://localhost:5173"
     
     # ✅ Token expiration (NEW)
     RESET_TOKEN_EXPIRE_HOURS: int = 1
