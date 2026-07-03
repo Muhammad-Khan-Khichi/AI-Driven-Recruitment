@@ -1,4 +1,4 @@
-from .db import Base, engine, SessionLocal, User, Resume, JobSearch, Application
+from database.db import Base, engine, SessionLocal, User, Resume, JobSearch, Application
 
 def get_db():
     db = SessionLocal()
