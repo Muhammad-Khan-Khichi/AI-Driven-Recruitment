@@ -1,280 +1,296 @@
 {
   "profile": {
     "job_titles": [
-      "AI Engineer",
       "Machine Learning Engineer",
-      "LLM Engineer",
-      "Software Engineer (AI/ML)",
-      "Full-Stack Developer (AI Focus)"
+      "Data Scientist",
+      "MLOps Engineer",
+      "Data Analyst",
+      "Business Intelligence Analyst"
     ],
     "skills": [
       "Python",
-      "Retrieval-Augmented Generation (RAG)",
-      "LangChain",
-      "Large Language Model (LLM) Development",
-      "AI Agent Development",
-      "Frontend Development (React, HTML, CSS, JavaScript, Tailwind CSS)",
-      "Version Control (Git)",
-      "Debugging",
-      "Software Development Lifecycle (SDLC)",
-      "API Integration"
+      "Scikit-Learn",
+      "Pandas",
+      "NumPy",
+      "TF-IDF Vectorization",
+      "Cosine Similarity",
+      "Random Forest",
+      "Logistic Regression",
+      "Streamlit",
+      "FastAPI"
     ],
-    "experience_years": 0.17,
-    "level": "junior",
-    "name": "MK Khichi",
+    "experience_years": 2,
+    "level": "mid",
+    "name": "Muhammad Khichi",
     "resume_path": "(from DB)"
   },
   "total_jobs_found": 15,
   "top_matches_count": 10,
-  "ranked_matches": "Here’s the ranked list of the **TOP 10 jobs** from **BEST to WORST match** for your candidate, based on skill overlap, role relevance, and experience level (junior-friendly):\n\n---\n\n### **1. AI Agent Engineer (Senior)** at **Funavry Technologies**\n   **Match Score: 90/100**\n   **Why:** Perfect alignment with **RAG, LangChain, LLM/AI agent development**, and **frontend (React/Tailwind)**—core for AI agents. Python, API integration, and SDLC further strengthen the fit.\n   **Missing:** Senior-level experience (though junior candidates with strong AI projects can still apply).\n   **Apply:** [LinkedIn](https://pk.linkedin.com/jobs/view/ai-agent-engineer-senior-at-funavry-technologies-4431574922)\n\n---\n\n### **2. AI Software Engineers (2 Positions)** at **TechWalks**\n   **Match Score: 88/100**\n   **Why:** **AI/ML, RAG, LangChain, and LLM development** are explicitly mentioned in the job, with Python and API integration as key requirements. Frontend (React/Tailwind) is a bonus for full-stack AI roles.\n   **Missing:** No explicit mention of AI agents (though RAG/LangChain implies similar work).\n   **Apply:** [LinkedIn](https://pk.linkedin.com/jobs/view/ai-software-engineers-2-positions-at-techwalks-4431957995)\n\n---\n\n### **3. AI Platform Engineer** at **Nayatel** *(Duplicate entries consolidated)*\n   **Match Score: 85/100**\n   **Why:** **Python, RAG, LangChain, LLM/ML, and AI agent development** are directly relevant for building AI platforms. API integration and SDLC are also critical.\n   **Missing:** Less emphasis on frontend (React/Tailwind), though backend-heavy AI platforms may not always require it.\n   **Apply:** [LinkedIn](https://pk.linkedin.com/jobs/view/ai-platform-engineer-at-nayatel-4431926678)\n\n---\n\n### **4. Python Developer** at **Solution of Technologies**\n   **Match Score: 65/100**\n   **Why:** While the title is generic, your **AI/ML (RAG, LangChain, LLM), Python, and API integration** skills make this a strong fit for an **AI-focused Python role**.\n   **Missing:** No explicit mention of AI agents, RAG, or LangChain in the job description (likely implied).\n   **Apply:** [LinkedIn](https://pk.linkedin.com/jobs/view/python-developer-at-solution-of-technologies-4435535489)\n\n---\n\n### **5. Entry-Level Software Developer (AI Focus)** at **Recruit AI**\n   **Match Score: 65/100**\n   **Why:** Despite being labeled \"Entry-Level,\" the **AI/ML (RAG, LangChain, LLM), React, and debugging** skills align well with junior AI roles.\n   **Missing:** No explicit mention of AI agents or platform engineering (more general software dev).\n   **Apply:** [LinkedIn](https://pk.linkedin.com/jobs/view/entry-level-software-developer-tj-1857341-at-recruit-ai-4435108400)\n\n---\n\n### **6. Senior Backend Engineer** at **Adroid IT Solutions**\n   **Match Score: 60/100**\n   **Why:** Your **Python, API integration, and debugging** skills fit backend roles, but the **lack of AI/ML focus** (only backend tech) makes this a weaker match.\n   **Missing:** No RAG, LangChain, or LLM experience mentioned in the job.\n   **Apply:** [LinkedIn](https://pk.linkedin.com/jobs/view/senior-backend-engineer-at-adroid-it-solutions-4432349560)\n\n---\n\n### **7-10. Duplicate AI Platform Engineer Roles at Nayatel**\n   **Match Score: 75/100 (Repeated Entries)**\n   **Why:** Same as **#3**—strong AI/ML fit but **redundant listings**.\n   **Missing:** No unique differentiation from other Nayatel roles.\n   **Apply:** [LinkedIn](https://pk.linkedin.com/jobs/view/ai-platform-engineer-at-nayatel-4431926678) *(Same as #3)*\n\n---\n\n### **Final Recommendations:**\n1. **Top 3 jobs (#1, #2, #3)** are **ideal**—apply with a **focus on AI agent/RAG/LangChain projects** in your resume.\n2. **#4 (Python Developer)** is a **safe fallback** if AI-specific roles are competitive.\n3. **Avoid #6 (Backend Engineer)** unless you can pivot to an AI role internally.\n4. **Ignore duplicates (#7-10)**—focus on unique listings.\n\n**Pro Tip:** For **junior roles**, highlight **projects** (e.g., \"Built an RAG-based chatbot with LangChain\") to compensate for experience gaps. Good luck! 🚀",
+  "ranked_matches": "Here’s the ranked list of the **TOP 10 jobs** from **BEST to WORST match** based on skill overlap, adjusted for relevance to your profile (mid-level ML/Data Science focus in Lahore/Pakistan):\n\n---\n\n### **1. AI Engineer L2 (Python ML / GenAI) at ByteCrew**\n   **Match Score: 95/100**\n   **Why:** Perfect alignment with **Machine Learning Engineer/MLOps** roles—your **Python, Scikit-Learn, TF-IDF, FastAPI, and GenAI-relevant skills** (e.g., NLP via TF-IDF/Cosine Similarity) are explicitly called out. Streamlit adds prototyping value.\n   **Missing:** Slightly higher emphasis on **GenAI frameworks** (e.g., LLMs, Hugging Face) beyond TF-IDF, though your NLP skills bridge this gap.\n   **Apply:** [LinkedIn](https://pk.linkedin.com/jobs/view/ai-engineer-l2-%C2%B7-4%2B-years-python-ml-genai-at-bytecrew-4408958576)\n\n---\n\n### **2. Machine Learning Engineer - AI (Remote) at Hire Feed**\n   **Match Score: 92/100**\n   **Why:** **Core ML Engineer role** with **Python, Scikit-Learn, Random Forest, Logistic Regression, and TF-IDF** as direct requirements. FastAPI/Streamlit are **bonus deployment skills** for MLOps.\n   **Missing:** No explicit mention of **cloud platforms** (AWS/GCP) or **CI/CD pipelines**, though your FastAPI experience compensates partially.\n   **Apply:** [LinkedIn](https://pk.linkedin.com/jobs/view/machine-learning-engineer-ai-remote-at-hire-feed-4434725484)\n\n---\n\n### **3. Data Scientist (Oil & Gas Industry) - CodeByte at Taraki**\n   **Match Score: 90/100**\n   **Why:** **Industry-specific Data Scientist role** leveraging your **Python, Pandas, NumPy, TF-IDF (NLP/text data), and ML models (Random Forest/Logistic Regression)**. Oil & Gas adds niche relevance.\n   **Missing:** Lacks **domain-specific tools** (e.g., reservoir simulation software), but your **NLP/ML skills** are transferable.\n   **Apply:** [LinkedIn](https://pk.linkedin.com/jobs/view/data-scientist-oil-gas-industry-codebyte-at-taraki-4432204841)\n\n---\n\n### **4. Artificial Intelligence Engineer, LearnWith.AI (Remote) at Crossover**\n   **Match Score: 88/100**\n   **Why:** **High-paying ($200K/year) AI Engineer role** with **Python, Scikit-Learn, and ML deployment** (implied via FastAPI). Your **TF-IDF/Cosine Similarity** skills align with **educational tech/NLP** applications.\n   **Missing:** No explicit **GenAI deployment** requirements beyond Python, but your **Streamlit/FastAPI** experience is a strong substitute.\n   **Apply:** [LinkedIn](https://pk.linkedin.com/jobs/view/artificial-intelligence-engineer-learnwith-ai-remote-%24200-000-year-usd-at-crossover-4431434060)\n\n---\n\n### **5. Machine Learning Researcher (Remote) at Hire Feed**\n   **Match Score: 85/100**\n   **Why:** **Research-focused ML role** where your **Scikit-Learn, Random Forest, and TF-IDF** are **core**. Streamlit/FastAPI add **prototyping/deployment** utility for research outputs.\n   **Missing:** Less emphasis on **production ML systems** (e.g., MLOps pipelines), but your **Logistic Regression** and **vectorization skills** are highly relevant.\n   **Apply:** [LinkedIn](https://pk.linkedin.com/jobs/view/machine-learning-researcher-remote-at-hire-feed-4434488174)\n\n---\n\n### **6. Data Scientist - AI/ML (Remote) at Hire Feed**\n   **Match Score: 82/100**\n   **Why:** **Classic Data Scientist role** with **Python, Pandas, NumPy, and ML models** as primary requirements. Your **TF-IDF/Cosine Similarity** add **NLP/text analytics** depth.\n   **Missing:** No **specific industry focus** (e.g., healthcare, fintech), but your **broad ML skills** make you adaptable.\n   **Apply:** [LinkedIn](https://pk.linkedin.com/jobs/view/data-scientist-ai-ml-remote-at-hire-feed-4434924820)\n\n---\n\n### **7. Artificial Intelligence Specialist at Recruitzz**\n   **Match Score: 80/100**\n   **Why:** **Lahore-based AI Specialist role** with **Python, Scikit-Learn, and ML deployment** (implied via FastAPI). Your **TF-IDF** skills are useful for **recruitment/NLP** applications.\n   **Missing:** Less clarity on **specific AI tools** (e.g., TensorFlow/PyTorch) beyond Scikit-Learn, but your **Random Forest/Logistic Regression** are strong alternatives.\n   **Apply:** [LinkedIn](https://pk.linkedin.com/jobs/view/artificial-intelligence-specialist-at-recruitzz-4431505029)\n\n---\n\n### **8. Machine Learning (AI) Engineer (Hybrid) at Hire Feed**\n   **Match Score: 78/100**\n   **Why:** **Hybrid ML Engineer role** with **Python, Scikit-Learn, and TF-IDF** as key skills. FastAPI/Streamlit are **bonus deployment assets**.\n   **Missing:** **Redundant with other Hire Feed roles**—apply only if you prefer hybrid work over remote.\n   **Apply:** [LinkedIn](https://pk.linkedin.com/jobs/view/machine-learning-ai-engineer-hybrid-at-hire-feed-4434724165)\n\n---\n\n### **9. Lead Analyst, Geospatial Data at TekMinds International**\n   **Match Score: 70/100**\n   **Why:** **Data Analyst role** with **Python, Pandas, and ML exposure** (Random Forest/Logistic Regression). Your **TF-IDF** could apply to **text-heavy geospatial metadata**.\n   **Missing:** **Critical gap in geospatial tools** (e.g., GIS, GeoPandas, Rasterio)—your skills are **foundational but not specialized**.\n   **Apply:** [LinkedIn](https://pk.linkedin.com/jobs/view/lead-analyst-geospatial-data-at-tekminds-international-4436319237)\n\n---\n\n### **10. Machine Learning (AI) Engineer (Hybrid) at Hire Feed (Duplicate)**\n   **Match Score: 75/100**\n   **Why:** **Identical to #8**—same skills, same company. Only apply if you **prioritize hybrid work** or have a preference for this specific posting.\n   **Missing:** **No unique differentiator** over other Hire Feed roles.\n   **Apply:** [LinkedIn](https://pk.linkedin.com/jobs/view/machine-learning-ai-engineer-hybrid-at-hire-feed-4435514024)\n\n---\n\n### **Key Takeaways for Lahore Candidates:**\n1. **Top 3 Picks (90%+ Match):**\n   - **ByteCrew (AI Engineer L2)** for **GenAI/ML deployment** (highest pay).\n   - **Taraki (Oil & Gas Data Scientist)** for **industry specialization**.\n   - **Hire Feed (ML Engineer - Remote)** for **flexibility**.\n\n2. **Avoid Unless Necessary:**\n   - **TekMinds (Geospatial)**—your skills don’t align with the niche.\n   - **Duplicate Hire Feed roles**—apply only if you have a reason to prefer hybrid/remote.\n\n3. **Leverage Your Strengths:**\n   - **TF-IDF/Cosine Similarity** → Highlight for **NLP/Data Science roles** (e.g., Taraki, Recruitzz).\n   - **FastAPI/Streamlit** → Emphasize for **MLOps/Deployment-focused jobs** (e.g., ByteCrew, Hire Feed).\n\n4. **Lahore-Specific Tip:**\n   - **ByteCrew and Recruitzz** are Lahore-based—prioritize these for **local networking** and **work-life balance**.\n\nWould you like help tailoring your resume for any of these roles?",
   "cover_letters_generated": 0,
   "jobs": [
     {
-      "title": "AI Agent Engineer (Senior)",
-      "company": "Funavry Technologies",
-      "url": "https://pk.linkedin.com/jobs/view/ai-agent-engineer-senior-at-funavry-technologies-4431574922",
-      "location": "Islamabad, Islāmābād, Pakistan",
-      "description": "Job Title: AI Agent Engineer (Senior) | Company: Funavry Technologies | Location: Islamabad, Islāmābād, Pakistan",
-      "semantic_score": 3.4,
-      "score": 90,
-      "match_reason": "Highly relevant: Candidate has **Python, RAG, LangChain, LLM/ML development, AI agent development**, and **frontend skills (React, Tailwind CSS)**—all core for an **AI Agent Engineer (Senior)** role. Version control, debugging, and SDLC align with senior-level expectations.",
-      "final_score": 55.36,
-      "ai_score": 90
-    },
-    {
-      "title": "AI Software Engineers (2 Positions)",
-      "company": "TechWalks",
-      "url": "https://pk.linkedin.com/jobs/view/ai-software-engineers-2-positions-at-techwalks-4431957995",
-      "location": "Islāmābād, Pakistan",
-      "description": "Job Title: AI Software Engineers (2 Positions) | Company: TechWalks | Location: Islāmābād, Pakistan",
-      "semantic_score": 2.8,
-      "score": 90,
-      "match_reason": "Candidate's skills (Python, RAG, LangChain, LLM/ML development, AI agent development, API integration) align **exceptionally well** with the AI-focused role. Frontend (React/Tailwind) and SDLC are secondary but still relevant for full-stack AI applications.",
-      "final_score": 55.12,
-      "ai_score": 90
-    },
-    {
-      "title": "AI Platform Engineer",
-      "company": "Nayatel",
-      "url": "https://pk.linkedin.com/jobs/view/ai-platform-engineer-at-nayatel-4431926678",
-      "location": "Islāmābād, Pakistan",
-      "description": "Job Title: AI Platform Engineer | Company: Nayatel | Location: Islāmābād, Pakistan",
-      "semantic_score": 1.5,
-      "score": 85,
-      "match_reason": "Strong overlap with **AI Platform Engineer** role: Python, RAG, LangChain, LLM/ML development, AI agent expertise, and API integration align perfectly. Frontend skills (React/Tailwind) are a bonus for platform development.",
-      "final_score": 51.6,
-      "ai_score": 85
-    },
-    {
-      "title": "AI Platform Engineer",
-      "company": "Nayatel",
-      "url": "https://pk.linkedin.com/jobs/view/ai-platform-engineer-at-nayatel-4431926678",
-      "location": "Islāmābād, Pakistan",
-      "description": "Job Title: AI Platform Engineer | Company: Nayatel | Location: Islāmābād, Pakistan",
-      "semantic_score": 1.5,
-      "score": 85,
-      "match_reason": "Highly relevant: Python, RAG, LangChain, LLM/ML development, and AI agent skills align perfectly with AI Platform Engineer role (building scalable AI systems, integrating LLMs, and optimizing AI workflows). Frontend/React skills are a bonus for platform UI components.",
-      "final_score": 51.6,
-      "ai_score": 85
-    },
-    {
-      "title": "AI Platform Engineer",
-      "company": "Nayatel",
-      "url": "https://pk.linkedin.com/jobs/view/ai-platform-engineer-at-nayatel-4431926678",
-      "location": "Islāmābād, Pakistan",
-      "description": "Job Title: AI Platform Engineer | Company: Nayatel | Location: Islāmābād, Pakistan",
-      "semantic_score": 1.5,
+      "title": "Data Scientist - AI/ML (Remote)",
+      "company": "Hire Feed",
+      "url": "https://pk.linkedin.com/jobs/view/data-scientist-ai-ml-remote-at-hire-feed-4434924820",
+      "location": "Pakistan",
+      "description": "Job Title: Data Scientist - AI/ML (Remote) | Company: Hire Feed | Location: Pakistan",
+      "semantic_score": -27.7,
       "score": 75,
-      "match_reason": "Strong overlap with AI/ML-focused roles (Python, RAG, LangChain, LLM/ML development, AI agent development) and relevant tech stack (API integration, SDLC). Frontend skills (React/Tailwind) are a minor plus for full-stack AI roles.",
-      "final_score": 45.6,
+      "match_reason": "Strong alignment with **Data Scientist** and **Machine Learning Engineer** roles. Candidate's skills (Python, Scikit-Learn, Pandas, NumPy, TF-IDF, Cosine Similarity, Random Forest, Logistic Regression) directly match core ML/data science tasks. Streamlit/FastAPI add relevance for prototyping/deployment, though not critical for this role.",
+      "final_score": 33.92,
       "ai_score": 75
     },
     {
-      "title": "AI Platform Engineer",
-      "company": "Nayatel",
-      "url": "https://pk.linkedin.com/jobs/view/ai-platform-engineer-at-nayatel-4431926678",
-      "location": "Islāmābād, Pakistan",
-      "description": "Job Title: AI Platform Engineer | Company: Nayatel | Location: Islāmābād, Pakistan",
-      "semantic_score": 1.5,
+      "title": "Artificial Intelligence Engineer, LearnWith.AI (Remote) - $200,000/year USD",
+      "company": "Crossover",
+      "url": "https://pk.linkedin.com/jobs/view/artificial-intelligence-engineer-learnwith-ai-remote-%24200-000-year-usd-at-crossover-4431434060",
+      "location": "Rawalpindi, Punjab, Pakistan",
+      "description": "Job Title: Artificial Intelligence Engineer, LearnWith.AI (Remote) - $200,000/year USD | Company: Crossover | Location: Rawalpindi, Punjab, Pakistan",
+      "semantic_score": -28.4,
       "score": 75,
-      "match_reason": "Strong overlap with AI/ML, LLM, and AI agent development skills; Python, LangChain, and RAG are highly relevant for AI platform engineering.",
-      "final_score": 45.6,
+      "match_reason": "Strong alignment with **Machine Learning Engineer** and **MLOps Engineer** roles due to Python, Scikit-Learn, Pandas, NumPy, Random Forest, Logistic Regression, and TF-IDF/Cosine Similarity expertise. Streamlit/FastAPI also support ML deployment and tooling relevance.",
+      "final_score": 33.64,
       "ai_score": 75
     },
     {
-      "title": "AI Platform Engineer",
-      "company": "Nayatel",
-      "url": "https://pk.linkedin.com/jobs/view/ai-platform-engineer-at-nayatel-4431926678",
-      "location": "Islāmābād, Pakistan",
-      "description": "Job Title: AI Platform Engineer | Company: Nayatel | Location: Islāmābād, Pakistan",
-      "semantic_score": 1.5,
+      "title": "Artificial Intelligence Specialist",
+      "company": "Recruitzz",
+      "url": "https://pk.linkedin.com/jobs/view/artificial-intelligence-specialist-at-recruitzz-4431505029",
+      "location": "Lahore, Punjab, Pakistan",
+      "description": "Job Title: Artificial Intelligence Specialist | Company: Recruitzz | Location: Lahore, Punjab, Pakistan",
+      "semantic_score": -29.8,
       "score": 75,
-      "match_reason": "Strong alignment with AI/ML and LLM development skills (Python, RAG, LangChain, LLM Development, AI Agent Development) and relevant technical expertise (API Integration, SDLC, Git). Frontend skills (React, Tailwind) are a bonus for full-stack AI platform roles.",
-      "final_score": 45.6,
+      "match_reason": "Strong alignment with **Machine Learning Engineer** and **Data Scientist** roles due to Python, Scikit-Learn, Pandas, NumPy, Random Forest, Logistic Regression, and TF-IDF/Cosine Similarity expertise. Streamlit/FastAPI add relevance for deployment/MLOps aspects.",
+      "final_score": 33.08,
       "ai_score": 75
     },
     {
-      "title": "Python Developer",
-      "company": "Solution of Technologies",
-      "url": "https://pk.linkedin.com/jobs/view/python-developer-at-solution-of-technologies-4435535489",
-      "location": "Islamabad, Islāmābād, Pakistan",
-      "description": "Job Title: Python Developer | Company: Solution of Technologies | Location: Islamabad, Islāmābād, Pakistan",
-      "semantic_score": 14.6,
-      "score": 65,
-      "match_reason": "Candidate has strong Python skills (core requirement) and relevant AI/ML/LLM expertise (RAG, LangChain, LLM Development, AI Agent Development), though the job title is more general ('Python Developer'). Frontend skills (React/Tailwind) are less relevant but don’t disqualify.",
-      "final_score": 44.84,
-      "ai_score": 65
+      "title": "Data Scientist (Oil & Gas Industry) - CodeByte",
+      "company": "Taraki",
+      "url": "https://pk.linkedin.com/jobs/view/data-scientist-oil-gas-industry-codebyte-at-taraki-4432204841",
+      "location": "Lahore, Punjab, Pakistan",
+      "description": "Job Title: Data Scientist (Oil & Gas Industry) - CodeByte | Company: Taraki | Location: Lahore, Punjab, Pakistan",
+      "semantic_score": -30.6,
+      "score": 75,
+      "match_reason": "Candidate has strong ML/data science skills (Python, Scikit-Learn, Pandas, NumPy, Random Forest, Logistic Regression) and relevant NLP/text processing (TF-IDF, Cosine Similarity). Streamlit/FastAPI align with data science deployment needs. Highly relevant for Data Scientist role.",
+      "final_score": 32.76,
+      "ai_score": 75
     },
     {
-      "title": "Entry-Level Software Developer - TJ / 1857341",
-      "company": "Recruit AI",
-      "url": "https://pk.linkedin.com/jobs/view/entry-level-software-developer-tj-1857341-at-recruit-ai-4435108400",
+      "title": "AI Engineer L2 · 4+ years (Python ML / GenAI)",
+      "company": "ByteCrew",
+      "url": "https://pk.linkedin.com/jobs/view/ai-engineer-l2-%C2%B7-4%2B-years-python-ml-genai-at-bytecrew-4408958576",
+      "location": "Lahore, Punjab, Pakistan",
+      "description": "Job Title: AI Engineer L2 · 4+ years (Python ML / GenAI) | Company: ByteCrew | Location: Lahore, Punjab, Pakistan",
+      "semantic_score": -31.3,
+      "score": 75,
+      "match_reason": "Strong alignment with **AI Engineer (ML/GenAI)** role: Python, ML libraries (Scikit-Learn, Random Forest, Logistic Regression), and deployment tools (FastAPI) are highly relevant. TF-IDF/Cosine Similarity and Streamlit also support GenAI/NLP tasks.",
+      "final_score": 32.48,
+      "ai_score": 75
+    },
+    {
+      "title": "Machine Learning Researcher (Remote)",
+      "company": "Hire Feed",
+      "url": "https://pk.linkedin.com/jobs/view/machine-learning-researcher-remote-at-hire-feed-4434488174",
+      "location": "Pakistan",
+      "description": "Job Title: Machine Learning Researcher (Remote) | Company: Hire Feed | Location: Pakistan",
+      "semantic_score": -31.9,
+      "score": 75,
+      "match_reason": "Candidate has strong ML skills (Scikit-Learn, Random Forest, Logistic Regression, TF-IDF, Cosine Similarity) and relevant tools (Python, Pandas, NumPy). Streamlit/FastAPI align with research/deployment needs, though not core for this role.",
+      "final_score": 32.24,
+      "ai_score": 75
+    },
+    {
+      "title": "Machine Learning Engineer - AI (Remote)",
+      "company": "Hire Feed",
+      "url": "https://pk.linkedin.com/jobs/view/machine-learning-engineer-ai-remote-at-hire-feed-4434725484",
+      "location": "Pakistan",
+      "description": "Job Title: Machine Learning Engineer - AI (Remote) | Company: Hire Feed | Location: Pakistan",
+      "semantic_score": -33.1,
+      "score": 75,
+      "match_reason": "Strong alignment with **Machine Learning Engineer** role: Python, Scikit-Learn, Pandas, NumPy, Random Forest, Logistic Regression, and ML-related vectorization (TF-IDF, Cosine Similarity) are highly relevant. Streamlit/FastAPI add deployment/MLOps value.",
+      "final_score": 31.76,
+      "ai_score": 75
+    },
+    {
+      "title": "Machine Learning (AI) Engineer (Hybrid)",
+      "company": "Hire Feed",
+      "url": "https://pk.linkedin.com/jobs/view/machine-learning-ai-engineer-hybrid-at-hire-feed-4434724165",
+      "location": "Pakistan",
+      "description": "Job Title: Machine Learning (AI) Engineer (Hybrid) | Company: Hire Feed | Location: Pakistan",
+      "semantic_score": -34.5,
+      "score": 75,
+      "match_reason": "Candidate has strong ML engineering skills (Python, Scikit-Learn, Random Forest, Logistic Regression, TF-IDF, Cosine Similarity) and relevant tools (FastAPI for deployment, Streamlit for prototyping). Aligns well with ML/AI engineering roles.",
+      "final_score": 31.2,
+      "ai_score": 75
+    },
+    {
+      "title": "Machine Learning (AI) Engineer (Hybrid)",
+      "company": "Hire Feed",
+      "url": "https://pk.linkedin.com/jobs/view/machine-learning-ai-engineer-hybrid-at-hire-feed-4435514024",
+      "location": "Pakistan",
+      "description": "Job Title: Machine Learning (AI) Engineer (Hybrid) | Company: Hire Feed | Location: Pakistan",
+      "semantic_score": -34.5,
+      "score": 75,
+      "match_reason": "Strong alignment with **Machine Learning Engineer** role: Python, Scikit-Learn, Pandas, NumPy, Random Forest, Logistic Regression, and TF-IDF/Cosine Similarity (NLP/ML relevance) are core ML skills. Streamlit/FastAPI add deployment/MLOps utility.",
+      "final_score": 31.2,
+      "ai_score": 75
+    },
+    {
+      "title": "Lead Analyst, Geospatial Data",
+      "company": "TekMinds International",
+      "url": "https://pk.linkedin.com/jobs/view/lead-analyst-geospatial-data-at-tekminds-international-4436319237",
       "location": "Karāchi, Sindh, Pakistan",
-      "description": "Job Title: Entry-Level Software Developer - TJ / 1857341 | Company: Recruit AI | Location: Karāchi, Sindh, Pakistan",
-      "semantic_score": 2.1,
+      "description": "Job Title: Lead Analyst, Geospatial Data | Company: TekMinds International | Location: Karāchi, Sindh, Pakistan",
+      "semantic_score": -32.4,
       "score": 65,
-      "match_reason": "Candidate has strong alignment with **AI/ML-focused roles** (Python, RAG, LangChain, LLM/MLL development, AI agent development) and **frontend skills** (React, Tailwind CSS). While the job is labeled *Entry-Level Software Developer*, the AI/ML focus and candidate’s expertise in AI tools (LangChain, RAG) justify relevance. Version control, debugging, and SDLC are also transferable.",
-      "final_score": 39.84,
-      "ai_score": 65
-    },
-    {
-      "title": "Senior Backend Engineer",
-      "company": "Adroid IT Solutions",
-      "url": "https://pk.linkedin.com/jobs/view/senior-backend-engineer-at-adroid-it-solutions-4432349560",
-      "location": "Gujranwala, Punjab, Pakistan",
-      "description": "Job Title: Senior Backend Engineer | Company: Adroid IT Solutions | Location: Gujranwala, Punjab, Pakistan",
-      "semantic_score": 1.4,
-      "score": 65,
-      "match_reason": "Candidate has strong Python, LLM/AI Agent development, and backend-relevant skills (API integration, SDLC, debugging), though frontend skills (React/Tailwind) are less critical for a pure backend role. Target roles like AI Engineer/ML Engineer are closer fits, but the candidate's AI expertise compensates for the backend focus.",
-      "final_score": 39.56,
+      "match_reason": "Candidate has strong Python, Pandas, and NumPy skills (core for data analysis), with exposure to ML techniques (Random Forest, Logistic Regression) and data processing (TF-IDF, Cosine Similarity). Streamlit/FastAPI indicate potential for visualization/automation, though geospatial-specific tools (e.g., GIS, GeoPandas) are missing. Relevance is moderate-high due to overlap in analytical/data science foundations.",
+      "final_score": 26.04,
       "ai_score": 65
     }
   ],
   "all_jobs": [
     {
-      "title": "Full Stack Developer (Python/AI)",
-      "company": "SWIFTNINE",
+      "title": "Software Engineer - Python",
+      "company": "Devsinc",
       "location": "Lahore, Punjab, Pakistan",
-      "url": "https://pk.linkedin.com/jobs/view/full-stack-developer-python-ai-at-swiftnine-4432779374",
+      "url": "https://pk.linkedin.com/jobs/view/software-engineer-python-at-devsinc-4410516362",
       "snippet": "",
-      "source": "LinkedIn"
+      "source": "LinkedIn",
+      "posted_within": "any"
     },
     {
-      "title": "DevOps Engineer",
-      "company": "31 Green",
+      "title": "Junior Python Developer",
+      "company": "Translation Empire PK",
+      "location": "Rawalpindi, Punjab, Pakistan",
+      "url": "https://pk.linkedin.com/jobs/view/junior-python-developer-at-translation-empire-pk-4412542805",
+      "snippet": "",
+      "source": "LinkedIn",
+      "posted_within": "any"
+    },
+    {
+      "title": "Python Developer",
+      "company": "ZZ Technologies Islamabad",
       "location": "Islamabad, Islāmābād, Pakistan",
-      "url": "https://pk.linkedin.com/jobs/view/devops-engineer-at-31-green-4435042681",
+      "url": "https://pk.linkedin.com/jobs/view/python-developer-at-zz-technologies-islamabad-4434522514",
       "snippet": "",
-      "source": "LinkedIn"
+      "source": "LinkedIn",
+      "posted_within": "any"
     },
     {
-      "title": "Junior AI Engineer",
-      "company": "Eurus Technologies",
-      "location": "Islamabad, Islāmābād, Pakistan",
-      "url": "https://pk.linkedin.com/jobs/view/junior-ai-engineer-at-eurus-technologies-4432762990",
+      "title": "Full Stack Python Developer",
+      "company": "Tiksom Limited",
+      "location": "Johar Town, Punjab, Pakistan",
+      "url": "https://pk.linkedin.com/jobs/view/full-stack-python-developer-at-tiksom-limited-4245302811",
       "snippet": "",
-      "source": "LinkedIn"
+      "source": "LinkedIn",
+      "posted_within": "any"
     },
     {
-      "title": "Software Engineer - TJ / 1858350",
-      "company": "Recruit AI",
+      "title": "Software Developer - Python (Remote)",
+      "company": "Hire Feed",
       "location": "Pakistan",
-      "url": "https://pk.linkedin.com/jobs/view/software-engineer-tj-1858350-at-recruit-ai-4436146274",
+      "url": "https://pk.linkedin.com/jobs/view/software-developer-python-remote-at-hire-feed-4437729603",
       "snippet": "",
-      "source": "LinkedIn"
+      "source": "LinkedIn",
+      "posted_within": "any"
     },
     {
-      "title": "Full Stack Engineer",
-      "company": "Ambidex",
-      "location": "Islamabad, Islāmābād, Pakistan",
-      "url": "https://pk.linkedin.com/jobs/view/full-stack-engineer-at-ambidex-4435019833",
+      "title": "Python Engineer",
+      "company": "SME Careers",
+      "location": "Pakistan",
+      "url": "https://pk.linkedin.com/jobs/view/python-engineer-at-sme-careers-4424785734",
       "snippet": "",
-      "source": "LinkedIn"
+      "source": "LinkedIn",
+      "posted_within": "any"
     },
     {
-      "title": "Full Stack Engineer",
-      "company": "Ambidex",
+      "title": "Senior Python Developer",
+      "company": "Devsinc",
+      "location": "Lahore, Punjab, Pakistan",
+      "url": "https://pk.linkedin.com/jobs/view/senior-python-developer-at-devsinc-4431690903",
+      "snippet": "",
+      "source": "LinkedIn",
+      "posted_within": "any"
+    },
+    {
+      "title": "Backend Engineer, PAKISTAN",
+      "company": "nsave",
+      "location": "Pakistan",
+      "url": "https://pk.linkedin.com/jobs/view/backend-engineer-pakistan-at-nsave-4431877308",
+      "snippet": "",
+      "source": "LinkedIn",
+      "posted_within": "any"
+    },
+    {
+      "title": "Senior Software Engineer - Python",
+      "company": "Devsinc",
+      "location": "Lahore, Punjab, Pakistan",
+      "url": "https://pk.linkedin.com/jobs/view/senior-software-engineer-python-at-devsinc-4413291697",
+      "snippet": "",
+      "source": "LinkedIn",
+      "posted_within": "any"
+    },
+    {
+      "title": "Python Game Developer (Panda3D)",
+      "company": "Gramian Consulting",
+      "location": "Pakistan",
+      "url": "https://pk.linkedin.com/jobs/view/python-game-developer-panda3d-at-gramian-consulting-4434753168",
+      "snippet": "",
+      "source": "LinkedIn",
+      "posted_within": "any"
+    },
+    {
+      "title": "Mid Python Developer",
+      "company": "Translation Empire PK",
+      "location": "Rawalpindi, Punjab, Pakistan",
+      "url": "https://pk.linkedin.com/jobs/view/mid-python-developer-at-translation-empire-pk-4412749469",
+      "snippet": "",
+      "source": "LinkedIn",
+      "posted_within": "any"
+    },
+    {
+      "title": "Full Stack Engineer - Python+React",
+      "company": "Creative Chaos",
+      "location": "Pakistan",
+      "url": "https://pk.linkedin.com/jobs/view/full-stack-engineer-python%2Breact-at-creative-chaos-4412548510",
+      "snippet": "",
+      "source": "LinkedIn",
+      "posted_within": "any"
+    },
+    {
+      "title": "Senior Python Developer - Web Scraper | BeautifulSoup or Scrapy",
+      "company": "NielsenIQ",
       "location": "Karāchi, Sindh, Pakistan",
-      "url": "https://pk.linkedin.com/jobs/view/full-stack-engineer-at-ambidex-4435012944",
+      "url": "https://pk.linkedin.com/jobs/view/senior-python-developer-web-scraper-beautifulsoup-or-scrapy-at-nielseniq-4432243304",
       "snippet": "",
-      "source": "LinkedIn"
+      "source": "LinkedIn",
+      "posted_within": "any"
     },
     {
-      "title": "Full Stack Django Developer",
-      "company": "EvolveDash Inc.",
-      "location": "Lahore, Punjab, Pakistan",
-      "url": "https://pk.linkedin.com/jobs/view/full-stack-django-developer-at-evolvedash-inc-4435027414",
-      "snippet": "",
-      "source": "LinkedIn"
-    },
-    {
-      "title": "DevOps & Site Reliability Engineer (GCP)",
-      "company": "Qureos",
-      "location": "Islāmābād, Pakistan",
-      "url": "https://pk.linkedin.com/jobs/view/devops-site-reliability-engineer-gcp-at-qureos-4432773079",
-      "snippet": "",
-      "source": "LinkedIn"
-    },
-    {
-      "title": "Data Scientist",
-      "company": "Quirky Bit",
-      "location": "Lahore, Punjab, Pakistan",
-      "url": "https://pk.linkedin.com/jobs/view/data-scientist-at-quirky-bit-4436318401",
-      "snippet": "",
-      "source": "LinkedIn"
-    },
-    {
-      "title": "Backend Engineer - Wallets (100% Remote)",
-      "company": "Tether.io",
-      "location": "Pakistan",
-      "url": "https://pk.linkedin.com/jobs/view/backend-engineer-wallets-100%25-remote-at-tether-io-4417321706",
-      "snippet": "",
-      "source": "LinkedIn"
-    },
-    {
-      "title": "Internet of Things Engineer",
-      "company": "The Cloud Services",
+      "title": "Junior Back End Developer",
+      "company": "Translation Empire PK",
       "location": "Islamabad, Islāmābād, Pakistan",
-      "url": "https://pk.linkedin.com/jobs/view/internet-of-things-engineer-at-the-cloud-services-4435053880",
+      "url": "https://pk.linkedin.com/jobs/view/junior-back-end-developer-at-translation-empire-pk-4410016791",
       "snippet": "",
-      "source": "LinkedIn"
+      "source": "LinkedIn",
+      "posted_within": "any"
     },
     {
-      "title": "𝐔𝐫𝐠𝐞𝐧𝐭 𝐇𝐢𝐫𝐢𝐧𝐠: 𝐌𝐢𝐜𝐫𝐨𝐬𝐨𝐟𝐭 𝐒𝐞𝐧𝐭𝐢𝐧𝐞𝐥 𝐄𝐧𝐠𝐢𝐧𝐞𝐞𝐫 - 𝐑𝐞𝐦𝐨𝐭𝐞(Pakistan)",
-      "company": "DeltaRoot LLC",
-      "location": "Pakistan",
-      "url": "https://pk.linkedin.com/jobs/view/%F0%9D%90%94%F0%9D%90%AB%F0%9D%90%A0%F0%9D%90%9E%F0%9D%90%A7%F0%9D%90%AD-%F0%9D%90%87%F0%9D%90%A2%F0%9D%90%AB%F0%9D%90%A2%F0%9D%90%A7%F0%9D%90%A0-%F0%9D%90%8C%F0%9D%90%A2%F0%9D%90%9C%F0%9D%90%AB%F0%9D%90%A8%F0%9D%90%AC%F0%9D%90%A8%F0%9D%90%9F%F0%9D%90%AD-%F0%9D%90%92%F0%9D%90%9E%F0%9D%90%A7%F0%9D%90%AD%F0%9D%90%A2%F0%9D%90%A7%F0%9D%90%9E%F0%9D%90%A5-%F0%9D%90%84%F0%9D%90%A7%F0%9D%90%A0%F0%9D%90%A2%F0%9D%90%A7%F0%9D%90%9E%F0%9D%90%9E%F0%9D%90%AB-%F0%9D%90%91%F0%9D%90%9E%F0%9D%90%A6%F0%9D%90%A8%F0%9D%90%AD%F0%9D%90%9E-pakistan-at-deltaroot-llc-4432770913",
+      "title": "Senior Python Developer",
+      "company": "Translation Empire PK",
+      "location": "Rawalpindi, Punjab, Pakistan",
+      "url": "https://pk.linkedin.com/jobs/view/senior-python-developer-at-translation-empire-pk-4419442292",
       "snippet": "",
-      "source": "LinkedIn"
-    },
-    {
-      "title": "Senior Machine Learning Engineer",
-      "company": "Quirky Bit",
-      "location": "Lahore, Punjab, Pakistan",
-      "url": "https://pk.linkedin.com/jobs/view/senior-machine-learning-engineer-at-quirky-bit-4436315552",
-      "snippet": "",
-      "source": "LinkedIn"
-    },
-    {
-      "title": "Back End Software Developers",
-      "company": "VaporVM",
-      "location": "Lahore, Punjab, Pakistan",
-      "url": "https://pk.linkedin.com/jobs/view/back-end-software-developers-at-vaporvm-4435049299",
-      "snippet": "",
-      "source": "LinkedIn"
-    },
-    {
-      "title": "Junior Software Engineer",
-      "company": "Smart Prop Firm",
-      "location": "Pakistan",
-      "url": "https://pk.linkedin.com/jobs/view/junior-software-engineer-at-smart-prop-firm-4432719057",
-      "snippet": "",
-      "source": "LinkedIn"
+      "source": "LinkedIn",
+      "posted_within": "any"
     }
   ],
   "semantic_search_used": true,
-  "vector_db_jobs": 324,
+  "vector_db_jobs": 516,
   "search_keywords_used": [
     "Python Engineer"
-  ]
+  ],
+  "time_filter": "any"
 }
