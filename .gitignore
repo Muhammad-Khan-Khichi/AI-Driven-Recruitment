@@ -27,3 +27,7 @@ data/cover_letters/*.pdf
 data/cover_letters/*.txt
 database/* .db
 chroma_data/*
+
+
+uploads/avatars/*
+!uploads/avatars/.gitkeep
