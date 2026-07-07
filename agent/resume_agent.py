@@ -44,30 +44,29 @@ class JobFinderAgent:
 
     def run(
         self,
-        resume_path: str = None,           # ⚡ Optional now
-        resume_text: str = "",             # ⚡ NEW: accept text directly
+        resume_path: str = None,
+        resume_text: str = "",
         candidate_name: str = "Candidate",
         user_id: int = None,
-        custom_keywords: list = None
+        custom_keywords: list = None,
+        time_filter: str = "any"   # ✅ NEW
     ) -> dict:
         """Main agent workflow with semantic + AI hybrid ranking."""
-        logger.info(f"Starting job search for: {resume_path or 'text input'}")
+        logger.info(f"Starting job search for: {resume_path or 'text input'} (time_filter={time_filter})")
 
-        # ─── Step 1: Load resume (⚡ Use text from DB if provided!) ───
+        # ─── Step 1: Load resume ─────────────────────────────
         logger.info("[1/5] Loading resume")
-        
+
         if resume_text and len(resume_text) > 100:
-            # ⚡ FAST! Use text directly from DB
             logger.info(f"  ⚡ Using resume text from DB ({len(resume_text)} chars)")
         elif resume_path and os.path.exists(resume_path):
-            # Fallback: load from file
             logger.info(f"  📄 Loading resume from file: {resume_path}")
             resume_text = load_resume_text(resume_path)
         else:
             logger.warning(f"  ⚠️  No resume content available!")
             resume_text = ""
 
-        # ─── Step 2: Extract profile ──────────────────────────
+        # ─── Step 2: Extract profile ─────────────────────────
         logger.info("[2/5] Extracting profile")
         profile = extract_skills_from_resume(resume_text)
         profile["name"] = candidate_name
@@ -80,16 +79,16 @@ class JobFinderAgent:
         logger.info("[3/5] Searching job boards")
         all_jobs = []
 
-        # ⚡ Use custom_keywords if provided, else fall back to resume job_titles
         if custom_keywords and len(custom_keywords) > 0:
-            search_terms = custom_keywords[:2]  # ⚡ Only 2 keywords (was 5)
+            search_terms = custom_keywords[:2]
             logger.info(f"  Using {safe_len(search_terms)} custom keywords: {search_terms}")
         else:
-            search_terms = profile.get("job_titles", [])[:2]  # ⚡ Only 2 (was 3)
+            search_terms = profile.get("job_titles", [])[:2]
             logger.info(f"  Using {safe_len(search_terms)} resume-extracted roles")
 
+        # ✅ NEW: Pass location AND time_filter to the scrapers
         for term in search_terms:
-            jobs = search_all_sources(term, self.location)
+            jobs = search_all_sources(term, self.location, time_filter=time_filter)
             all_jobs.extend(jobs)
 
         unique_jobs = deduplicate_jobs(all_jobs)
@@ -101,7 +100,6 @@ class JobFinderAgent:
         job_store = None
         self.last_vector_stats = {"total_jobs": 0}
 
-        # 4a. Index fetched jobs into vector store (with duplicate check!)
         try:
             job_store = JobVectorStore()
             add_result = job_store.add_jobs(unique_jobs)
@@ -111,25 +109,23 @@ class JobFinderAgent:
         except Exception as e:
             logger.warning(f"  Vector indexing failed: {e} — falling back to keyword search")
 
-        # 4b. Run semantic search using resume text as query (⚡ FASTER!)
         semantic_results = []
         try:
             semantic_search = SemanticJobSearch()
             semantic_results = semantic_search.search(
-                query=resume_text[:1000],  # ⚡ Less text = faster (was 2000)
+                query=resume_text[:1000],
                 user_id=user_id,
-                n_results=10,              # ⚡ Fewer results = faster (was 20)
-                use_resume=False,          # ⚡ Skip user-specific (faster, was True)
+                n_results=10,
+                use_resume=False,
                 filter_remote=False
             )
             logger.info(f"  Semantic matches found: {safe_len(semantic_results)}")
         except Exception as e:
             logger.warning(f"  Semantic search failed: {e}")
 
-        # 4c. Convert semantic results to AI-ranker format
         if semantic_results:
             jobs_for_ai_ranking = []
-            for sem_job in semantic_results[:10]:  # ⚡ Top 10 (was 15)
+            for sem_job in semantic_results[:10]:
                 jobs_for_ai_ranking.append({
                     "title": sem_job.get("title", ""),
                     "company": sem_job.get("company", ""),
@@ -139,16 +135,13 @@ class JobFinderAgent:
                     "semantic_score": sem_job.get("similarity_score", 0) * 100
                 })
         else:
-            # Fallback to first 10 fetched jobs
             jobs_for_ai_ranking = unique_jobs[:10]
             logger.info("  Using first 10 fetched jobs (no semantic results)")
 
         # ─── Step 5: AI ranking (Mistral) on top candidates ─
         logger.info("[5/5] AI ranking top candidates (Mistral)")
-        # ⚡ Lower threshold = more jobs pass = less filtering time
         filtered_jobs = filter_jobs_with_ai(jobs_for_ai_ranking, profile, min_score=30)
 
-        # 5a. Combine semantic + AI scores
         for job in filtered_jobs:
             sem_score = 0
             for s in semantic_results:
@@ -161,12 +154,11 @@ class JobFinderAgent:
             job["semantic_score"] = round(sem_score, 2)
             job["ai_score"] = ai_score
 
-        # 5b. Sort by final combined score
         filtered_jobs.sort(key=lambda x: x.get("final_score", 0), reverse=True)
         top_matches = filtered_jobs[:settings.TOP_MATCHES_COUNT]
         logger.info(f"  Final top matches: {safe_len(top_matches)}")
 
-        # ─── Generate cover letters ───────────────────────────
+        # ─── Generate cover letters ─────────────────────────
         cover_letter_paths = []
         if self.generate_letters and top_matches:
             logger.info("Generating cover letters for top 3 matches...")
@@ -175,7 +167,7 @@ class JobFinderAgent:
             )
             cover_letter_paths = [r["file_path"] for r in letter_results]
 
-        # ─── Store resume in vector store (for future matches) ─
+        # ─── Store resume in vector store ────────────────────
         if user_id is not None:
             try:
                 resume_store = ResumeVectorStore()
@@ -188,7 +180,7 @@ class JobFinderAgent:
             except Exception as e:
                 logger.warning(f"  Resume vector storage failed: {e}")
 
-        # ─── Build final output ──────────────────────────────
+        # ─── Build final output ─────────────────────────────
         ranked_output = rank_jobs(top_matches, profile)
 
         results = {
@@ -201,7 +193,8 @@ class JobFinderAgent:
             "all_jobs": unique_jobs,
             "semantic_search_used": safe_len(semantic_results) > 0,
             "vector_db_jobs": self.last_vector_stats.get("total_jobs", 0) if self.last_vector_stats else 0,
-            "search_keywords_used": search_terms
+            "search_keywords_used": search_terms,
+            "time_filter": time_filter   # ✅ NEW: pass through to frontend
         }
 
         save_results(results, settings.OUTPUT_FILE)
@@ -213,22 +206,27 @@ class JobFinderAgent:
 # ─── API-friendly function ──────────────────────────────────
 
 def run_job_search(
-    resume_path: str = None,           # ⚡ Optional now
-    resume_text: str = "",             # ⚡ NEW!
+    resume_path: str = None,
+    resume_text: str = "",
     user_name: str = "User",
     generate_cover_letters: bool = False,
     location: str = None,
     top_n: int = None,
     user_id: int = None,
-    custom_keywords: list = None
+    custom_keywords: list = None,
+    time_filter: str = "any"   # ✅ NEW
 ) -> dict:
     """
     Function-based interface used by the FastAPI layer.
     Wraps the JobFinderAgent and returns a clean dict for JSON response.
-    
-    ⚡ NEW: Accepts resume_text from DB (no PDF file needed!)
     """
     try:
+        # ✅ Normalize time_filter
+        valid_filters = {"24h", "7d", "30d", "any"}
+        time_filter = (time_filter or "any").lower()
+        if time_filter not in valid_filters:
+            time_filter = "any"
+
         location = location or settings.DEFAULT_LOCATION
         top_n = top_n or settings.TOP_MATCHES_COUNT
 
@@ -238,13 +236,13 @@ def run_job_search(
 
         results = agent.run(
             resume_path=resume_path,
-            resume_text=resume_text,  # ⚡ Pass through!
+            resume_text=resume_text,
             candidate_name=user_name,
             user_id=user_id,
-            custom_keywords=custom_keywords
+            custom_keywords=custom_keywords,
+            time_filter=time_filter   # ✅ Pass through
         )
 
-        # Normalize output for API
         return {
             "status": "success",
             "profile": {
@@ -262,7 +260,8 @@ def run_job_search(
             "semantic_search_used": results.get("semantic_search_used", False),
             "vector_db_jobs": results.get("vector_db_jobs", 0),
             "search_keywords_used": results.get("search_keywords_used", []),
-            "location": location
+            "location": location,
+            "time_filter": time_filter   # ✅ NEW
         }
 
     except Exception as e:
@@ -294,6 +293,16 @@ def cli_main():
     cover_letters_input = input("Generate cover letters for top 3 matches? (y/n): ").strip().lower()
     generate_letters = cover_letters_input == "y"
 
+    # ✅ NEW: Ask user for time filter in CLI too
+    print("\nPosted within:")
+    print("  1) Last 24 hours")
+    print("  2) Last 7 days")
+    print("  3) Last 30 days")
+    print("  4) Any time (default)")
+    tf_choice = input("Choice [4]: ").strip() or "4"
+    tf_map = {"1": "24h", "2": "7d", "3": "30d", "4": "any"}
+    time_filter = tf_map.get(tf_choice, "any")
+
     if resume_path and not Path(resume_path).exists():
         for alt in [f"data/resumes/{resume_path}", f"./{resume_path}"]:
             if Path(alt).exists():
@@ -303,7 +312,8 @@ def cli_main():
     results = run_job_search(
         resume_path=resume_path,
         user_name=user_name,
-        generate_cover_letters=generate_letters
+        generate_cover_letters=generate_letters,
+        time_filter=time_filter   # ✅ NEW
     )
 
     if results["status"] == "success":
@@ -313,6 +323,7 @@ def cli_main():
 
         if results.get("semantic_search_used"):
             print(f"✅ Semantic search used ({results.get('vector_db_jobs', 0)} jobs in vector DB)\n")
+        print(f"📅 Time filter: {results.get('time_filter', 'any')}\n")
 
         for i, job in enumerate(results["top_jobs"][:10], 1):
             print(f"\n{i}. {job.get('title')} at {job.get('company')}")
