@@ -19,3 +19,4 @@ requests
 sentence-transformers
 mistralai>=1.0.0
 pillow
+itsdangerous
