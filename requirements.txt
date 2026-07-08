@@ -1,4 +1,4 @@
-bcrypt
+﻿bcrypt
 beautifulsoup4
 chromadb
 fastapi
