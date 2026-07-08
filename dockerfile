@@ -1,4 +1,3 @@
-@'
 FROM python:3.10-slim
 
 # Create non-root user (UID 1000) — required by HF Spaces
@@ -42,4 +41,3 @@ EXPOSE 7860
 
 # Run the FastAPI app — NOTE: api.main:app (not main:app)
 CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "7860"]
-'@ | Out-File -Encoding utf8 Dockerfile
