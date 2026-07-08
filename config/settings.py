@@ -21,9 +21,15 @@ class Settings:
     MAX_JOBS_PER_QUERY = 15
     TOP_MATCHES_COUNT = 10
 
-    # Paths
-    OUTPUT_FILE = "outputs/results.json"
-    COVER_LETTERS_DIR = "data/cover_letters"
+    # === HF Spaces: Use /tmp (only writable directory) ===
+    OUTPUT_DIR = "/tmp/outputs"
+    OUTPUT_FILE = os.path.join(OUTPUT_DIR, "results.json")
+    COVER_LETTERS_DIR = os.environ.get("COVER_LETTERS_DIR", "/tmp/data/cover_letters")
+
+    def __init__(self):
+        # Create writable directories at startup
+        os.makedirs(self.OUTPUT_DIR, exist_ok=True)
+        os.makedirs(self.COVER_LETTERS_DIR, exist_ok=True)
 
 
 settings = Settings()

@@ -1,11 +1,10 @@
-# database/db.py
-
 import os
 from datetime import datetime
 from sqlalchemy import create_engine, Column, Integer, String, Text, Float, DateTime, ForeignKey, Boolean, JSON
 from sqlalchemy.orm import declarative_base, sessionmaker, relationship
 
-DB_PATH = os.path.join(os.path.dirname(__file__), "jobsearcher.db")
+\
+DB_PATH = os.environ.get("DB_PATH", "/tmp/app.db")
 DATABASE_URL = f"sqlite:///{DB_PATH}"
 
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
@@ -113,7 +112,6 @@ class CoverLetter(Base):
         return f"<CoverLetter {self.id}: {self.job_title} at {self.company}>"
 
 
-# ✅ PasswordReset defined HERE (after Base, before other models that reference it)
 class PasswordReset(Base):
     __tablename__ = "password_resets"
     

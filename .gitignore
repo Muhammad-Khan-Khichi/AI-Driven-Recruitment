@@ -31,3 +31,36 @@ chroma_data/*
 
 uploads/avatars/*
 !uploads/avatars/.gitkeep
+@'
+# Secrets - NEVER push these
+.env
+.env.local
+.env.production
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so# Databases
+*.db
+*.sqlite3
+
+# ChromaDB
+chroma_data/
+
+# Uploads
+uploads/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+'@ | Out-File -Encoding utf8 D:\Internship\Job-Searcher\.gitignore
+# Cloned HF Space repo
+HireAI/

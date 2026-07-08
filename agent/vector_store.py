@@ -1,4 +1,4 @@
-"""Vector Store using ChromaDB for semantic job search.
+﻿"""Vector Store using ChromaDB for semantic job search.
 Embeds jobs and resumes using sentence-transformers.
 """
 import os
@@ -9,9 +9,9 @@ from chromadb.config import Settings
 from sentence_transformers import SentenceTransformer
 
 
-# Persistent storage path
-CHROMA_PATH = Path(__file__).parent.parent / "chroma_data"
-CHROMA_PATH.mkdir(exist_ok=True)
+# === HF Spaces: Use /tmp (only writable directory) ===
+CHROMA_PATH = Path(os.environ.get("CHROMA_PATH", "/tmp/chroma_db"))
+CHROMA_PATH.mkdir(parents=True, exist_ok=True)
 
 # Collection names
 JOBS_COLLECTION = "jobs_collection"
@@ -93,240 +93,144 @@ class JobVectorStore:
         """Generate unique ID for a job based on URL or title+company."""
         url = job.get("url") or job.get("link") or ""
         if url:
-            # Use URL hash for consistent ID
             return f"job_{hash(url) % 10**10}"
         
-        # Fallback: title + company
         title = job.get("title", "")
         company = job.get("company", "")
         return f"job_{hash(f'{title}_{company}') % 10**10}"
     
     def add_jobs(self, jobs: List[Dict]) -> Dict[str, int]:
-        """
-        Add jobs to vector store with duplicate detection.
-        Returns dict with 'added' and 'skipped' counts.
-        """
+        """Add jobs to vector store with duplicate detection."""
         if not jobs:
             return {"added": 0, "skipped": 0}
         
-        # Get existing IDs to check for duplicates
         existing_ids = self._get_existing_ids()
         
-        # Prepare documents, embeddings, and metadata
         documents = []
         metadatas = []
         ids = []
-        
         skipped_count = 0
         
         for job in jobs:
-            # Generate unique ID
             job_id = self._make_job_id(job)
             
-            # ← DUPLICATE CHECK! Skip if already exists
             if job_id in existing_ids:
                 skipped_count += 1
                 continue
             
-            # Create rich text representation for embedding
-            doc_text = self._job_to_text(job)
+            title = job.get("title", "")
+            company = job.get("company", "")
+            location = job.get("location", "")
+            description = job.get("description", "")
+            snippet = job.get("snippet", "")
+            url = job.get("url") or job.get("link", "")
+            source = job.get("source", "unknown")
+            
+            doc_text = f"{title} at {company}. Location: {location}. {description} {snippet}"
             documents.append(doc_text)
-            
-            # Metadata for filtering
-            metadata = {
-                "title": str(job.get("title", "")),
-                "company": str(job.get("company", "")),
-                "location": str(job.get("location", "")),
-                "source": str(job.get("source", "")),
-                "url": str(job.get("url", "")),
-                "remote": bool(job.get("remote", False)),
-            }
-            
-            # Add salary if available
-            if job.get("salary_min"):
-                metadata["salary_min"] = float(job["salary_min"])
-            if job.get("salary_max"):
-                metadata["salary_max"] = float(job["salary_max"])
-            
-            metadatas.append(metadata)
+            metadatas.append({
+                "title": title,
+                "company": company,
+                "location": location,
+                "url": url,
+                "source": source,
+            })
             ids.append(job_id)
         
-        # Embed and add in batch (only non-duplicates!)
-        if not ids:
-            return {"added": 0, "skipped": skipped_count}
+        if documents:
+            embeddings = embed_texts(documents)
+            self.collection.add(
+                documents=documents,
+                embeddings=embeddings,
+                metadatas=metadatas,
+                ids=ids
+            )
         
-        embeddings = embed_texts(documents)
-        
-        self.collection.add(
-            embeddings=embeddings,
-            documents=documents,
-            metadatas=metadatas,
-            ids=ids
-        )
-        
-        added_count = len(ids)
-        
-        return {"added": added_count, "skipped": skipped_count}
+        return {"added": len(documents), "skipped": skipped_count}
     
-    def search_jobs(
-        self,
-        query: str,
-        n_results: int = 10,
-        filter_remote: Optional[bool] = None,
-        min_salary: Optional[float] = None
-    ) -> List[Dict]:
-        """
-        Semantic search for jobs matching query.
-        Returns ranked list with similarity scores.
-        """
-        # Build where filter
-        where_filter = {}
-        if filter_remote is not None:
-            where_filter["remote"] = filter_remote
+    def search_jobs(self, query: str, n_results: int = 10, filter_remote: Optional[bool] = None) -> List[Dict]:
+        """Search jobs by semantic similarity."""
+        if self.collection.count() == 0:
+            return []
         
-        # Query
         query_embedding = embed_text(query)
         
-        results = self.collection.query(
-            query_embeddings=[query_embedding],
-            n_results=n_results,
-            where=where_filter if where_filter else None
-        )
+        try:
+            results = self.collection.query(
+                query_embeddings=[query_embedding],
+                n_results=min(n_results, self.collection.count()),
+            )
+        except Exception:
+            return []
         
-        # Format results
         jobs = []
-        if results["ids"] and results["ids"][0]:
-            for i, job_id in enumerate(results["ids"][0]):
-                # Calculate similarity (distance → similarity)
-                distance = results["distances"][0][i] if "distances" in results else 0
-                similarity = 1 - distance  # Convert distance to similarity
-                
-                jobs.append({
-                    "id": job_id,
-                    "title": results["metadatas"][0][i].get("title", ""),
-                    "company": results["metadatas"][0][i].get("company", ""),
-                    "location": results["metadatas"][0][i].get("location", ""),
-                    "source": results["metadatas"][0][i].get("source", ""),
-                    "url": results["metadatas"][0][i].get("url", ""),
-                    "remote": results["metadatas"][0][i].get("remote", False),
-                    "similarity_score": round(similarity, 3),
-                    "document": results["documents"][0][i] if "documents" in results else ""
-                })
+        for i, (doc, metadata, distance) in enumerate(zip(
+            results["documents"][0],
+            results["metadatas"][0],
+            results["distances"][0]
+        )):
+            jobs.append({
+                "title": metadata.get("title", ""),
+                "company": metadata.get("company", ""),
+                "location": metadata.get("location", ""),
+                "url": metadata.get("url", ""),
+                "source": metadata.get("source", ""),
+                "description": doc,
+                "semantic_score": float(distance),
+                "match_score": max(0, 100 - float(distance) * 10),
+            })
         
         return jobs
     
     def get_stats(self) -> Dict:
         """Get vector store statistics."""
-        count = self.collection.count()
-        return {
-            "total_jobs": count,
-            "collection_name": JOBS_COLLECTION,
-            "embedding_model": EMBEDDING_MODEL_NAME
-        }
-    
-    def clear(self):
-        """Clear all jobs (use carefully!)."""
-        self.client.delete_collection(JOBS_COLLECTION)
-        self.collection = self.client.get_or_create_collection(
-            name=JOBS_COLLECTION,
-            metadata={"description": "Job postings for semantic search"}
-        )
-    
-    def dedupe(self) -> int:
-        """Remove duplicate jobs from vector store."""
-        all_jobs = self.collection.get()
-        
-        if not all_jobs["ids"]:
-            return 0
-        
-        seen_ids = set()
-        duplicates_to_delete = []
-        
-        for job_id in all_jobs["ids"]:
-            if job_id in seen_ids:
-                duplicates_to_delete.append(job_id)
-            else:
-                seen_ids.add(job_id)
-        
-        if duplicates_to_delete:
-            self.collection.delete(ids=duplicates_to_delete)
-        
-        return len(duplicates_to_delete)
-    
-    @staticmethod
-    def _job_to_text(job: Dict) -> str:
-        """Convert job dict to rich text for embedding."""
-        parts = []
-        if job.get("title"):
-            parts.append(f"Job Title: {job['title']}")
-        if job.get("company"):
-            parts.append(f"Company: {job['company']}")
-        if job.get("location"):
-            parts.append(f"Location: {job['location']}")
-        if job.get("description"):
-            parts.append(f"Description: {job['description']}")
-        if job.get("skills"):
-            parts.append(f"Skills: {', '.join(job['skills'])}")
-        return " | ".join(parts)
+        try:
+            return {
+                "total_jobs": self.collection.count(),
+                "collection_name": self.collection.name,
+                "chroma_path": str(CHROMA_PATH),
+            }
+        except Exception as e:
+            return {"error": str(e)}
 
 
 class ResumeVectorStore:
-    """Vector store for resumes (for matching)."""
+    """Vector store for user resumes."""
     
     def __init__(self):
         self.client = get_chroma_client()
         self.collection = self.client.get_or_create_collection(
             name=RESUMES_COLLECTION,
-            metadata={"description": "Resumes for matching"}
+            metadata={"description": "User resumes for semantic search"}
         )
     
-    def add_resume(self, user_id: int, resume_text: str, skills: List[str]):
-        """Add or update a user's resume."""
-        # Embed text
+    def add_resume(self, user_id: int, resume_text: str, skills: List[str], roles: List[str]):
+        """Add or update a user resume in vector store."""
+        resume_id = f"resume_{user_id}"
+        
         embedding = embed_text(resume_text)
         
-        # Add metadata
-        metadata = {
-            "user_id": int(user_id),
-            "skills": ", ".join(skills) if skills else "",
-            "text_length": len(resume_text)
-        }
-        
-        # Use user_id as doc id (so we can update later)
-        doc_id = f"user_{user_id}"
-        
-        # Upsert (add or update)
         self.collection.upsert(
-            embeddings=[embedding],
+            ids=[resume_id],
             documents=[resume_text],
-            metadatas=[metadata],
-            ids=[doc_id]
+            embeddings=[embedding],
+            metadatas=[{
+                "user_id": user_id,
+                "skills": ", ".join(skills),
+                "roles": ", ".join(roles),
+            }]
         )
     
     def get_resume(self, user_id: int) -> Optional[Dict]:
-        """Get a user's resume from vector store."""
-        doc_id = f"user_{user_id}"
-        results = self.collection.get(ids=[doc_id])
-        
-        if results["ids"]:
-            return {
-                "user_id": user_id,
-                "text": results["documents"][0] if results["documents"] else "",
-                "metadata": results["metadatas"][0] if results["metadatas"] else {}
-            }
+        """Get a user resume from vector store."""
+        try:
+            result = self.collection.get(ids=[f"resume_{user_id}"])
+            if result["documents"]:
+                return {
+                    "text": result["documents"][0],
+                    "skills": result["metadatas"][0].get("skills", "").split(", "),
+                    "roles": result["metadatas"][0].get("roles", "").split(", "),
+                }
+        except Exception:
+            pass
         return None
-    
-    def match_jobs_to_resume(self, user_id: int, n_results: int = 10) -> List[str]:
-        """Get job IDs that best match a user's resume."""
-        resume = self.get_resume(user_id)
-        if not resume:
-            return []
-        
-        # Query jobs collection with resume text
-        job_store = JobVectorStore()
-        results = job_store.collection.query(
-            query_texts=[resume["text"]],
-            n_results=n_results
-        )
-        
-        return results["ids"][0] if results["ids"] else []
