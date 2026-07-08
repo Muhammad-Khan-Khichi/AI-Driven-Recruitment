@@ -18,7 +18,6 @@ from api.routes_profile import router as profile_router
 from fastapi.staticfiles import StaticFiles
 
 
-
 app = FastAPI(
     title="Job-Searcher AI Agent API",
     description="AI-powered job search with FastAPI",
@@ -38,10 +37,13 @@ app.add_middleware(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
+        # Local development
         "http://localhost:5173",
         "http://localhost:8501",
         "http://127.0.0.1:5173",
         "http://127.0.0.1:8501",
+        # Production frontend (Vercel)
+        "https://ai-driven-recruitment-frontend.vercel.app",
     ],
     allow_credentials=True,   # ✅ Now safe with exact origins
     allow_methods=["*"],
@@ -61,6 +63,7 @@ app.include_router(password_reset.router)
 app.include_router(profile_router)
 
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
+
 
 @app.get("/")
 def root():
