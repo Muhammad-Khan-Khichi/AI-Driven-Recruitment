@@ -1,6 +1,6 @@
 ---
 title: HireAI
-emoji: rocket
+emoji: 🚀
 colorFrom: green
 colorTo: blue
 sdk: docker
