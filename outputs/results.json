@@ -26,7 +26,7 @@
   },
   "total_jobs_found": 15,
   "top_matches_count": 10,
-  "ranked_matches": "Here’s the ranked list of the **TOP 10 jobs** from **BEST to WORST match** based on skill overlap, adjusted for relevance to your profile (mid-level ML/Data Science focus in Lahore/Pakistan):\n\n---\n\n### **1. AI Engineer L2 (Python ML / GenAI) at ByteCrew**\n   **Match Score: 95/100**\n   **Why:** Perfect alignment with **Machine Learning Engineer/MLOps** roles—your **Python, Scikit-Learn, TF-IDF, FastAPI, and GenAI-relevant skills** (e.g., NLP via TF-IDF/Cosine Similarity) are explicitly called out. Streamlit adds prototyping value.\n   **Missing:** Slightly higher emphasis on **GenAI frameworks** (e.g., LLMs, Hugging Face) beyond TF-IDF, though your NLP skills bridge this gap.\n   **Apply:** [LinkedIn](https://pk.linkedin.com/jobs/view/ai-engineer-l2-%C2%B7-4%2B-years-python-ml-genai-at-bytecrew-4408958576)\n\n---\n\n### **2. Machine Learning Engineer - AI (Remote) at Hire Feed**\n   **Match Score: 92/100**\n   **Why:** **Core ML Engineer role** with **Python, Scikit-Learn, Random Forest, Logistic Regression, and TF-IDF** as direct requirements. FastAPI/Streamlit are **bonus deployment skills** for MLOps.\n   **Missing:** No explicit mention of **cloud platforms** (AWS/GCP) or **CI/CD pipelines**, though your FastAPI experience compensates partially.\n   **Apply:** [LinkedIn](https://pk.linkedin.com/jobs/view/machine-learning-engineer-ai-remote-at-hire-feed-4434725484)\n\n---\n\n### **3. Data Scientist (Oil & Gas Industry) - CodeByte at Taraki**\n   **Match Score: 90/100**\n   **Why:** **Industry-specific Data Scientist role** leveraging your **Python, Pandas, NumPy, TF-IDF (NLP/text data), and ML models (Random Forest/Logistic Regression)**. Oil & Gas adds niche relevance.\n   **Missing:** Lacks **domain-specific tools** (e.g., reservoir simulation software), but your **NLP/ML skills** are transferable.\n   **Apply:** [LinkedIn](https://pk.linkedin.com/jobs/view/data-scientist-oil-gas-industry-codebyte-at-taraki-4432204841)\n\n---\n\n### **4. Artificial Intelligence Engineer, LearnWith.AI (Remote) at Crossover**\n   **Match Score: 88/100**\n   **Why:** **High-paying ($200K/year) AI Engineer role** with **Python, Scikit-Learn, and ML deployment** (implied via FastAPI). Your **TF-IDF/Cosine Similarity** skills align with **educational tech/NLP** applications.\n   **Missing:** No explicit **GenAI deployment** requirements beyond Python, but your **Streamlit/FastAPI** experience is a strong substitute.\n   **Apply:** [LinkedIn](https://pk.linkedin.com/jobs/view/artificial-intelligence-engineer-learnwith-ai-remote-%24200-000-year-usd-at-crossover-4431434060)\n\n---\n\n### **5. Machine Learning Researcher (Remote) at Hire Feed**\n   **Match Score: 85/100**\n   **Why:** **Research-focused ML role** where your **Scikit-Learn, Random Forest, and TF-IDF** are **core**. Streamlit/FastAPI add **prototyping/deployment** utility for research outputs.\n   **Missing:** Less emphasis on **production ML systems** (e.g., MLOps pipelines), but your **Logistic Regression** and **vectorization skills** are highly relevant.\n   **Apply:** [LinkedIn](https://pk.linkedin.com/jobs/view/machine-learning-researcher-remote-at-hire-feed-4434488174)\n\n---\n\n### **6. Data Scientist - AI/ML (Remote) at Hire Feed**\n   **Match Score: 82/100**\n   **Why:** **Classic Data Scientist role** with **Python, Pandas, NumPy, and ML models** as primary requirements. Your **TF-IDF/Cosine Similarity** add **NLP/text analytics** depth.\n   **Missing:** No **specific industry focus** (e.g., healthcare, fintech), but your **broad ML skills** make you adaptable.\n   **Apply:** [LinkedIn](https://pk.linkedin.com/jobs/view/data-scientist-ai-ml-remote-at-hire-feed-4434924820)\n\n---\n\n### **7. Artificial Intelligence Specialist at Recruitzz**\n   **Match Score: 80/100**\n   **Why:** **Lahore-based AI Specialist role** with **Python, Scikit-Learn, and ML deployment** (implied via FastAPI). Your **TF-IDF** skills are useful for **recruitment/NLP** applications.\n   **Missing:** Less clarity on **specific AI tools** (e.g., TensorFlow/PyTorch) beyond Scikit-Learn, but your **Random Forest/Logistic Regression** are strong alternatives.\n   **Apply:** [LinkedIn](https://pk.linkedin.com/jobs/view/artificial-intelligence-specialist-at-recruitzz-4431505029)\n\n---\n\n### **8. Machine Learning (AI) Engineer (Hybrid) at Hire Feed**\n   **Match Score: 78/100**\n   **Why:** **Hybrid ML Engineer role** with **Python, Scikit-Learn, and TF-IDF** as key skills. FastAPI/Streamlit are **bonus deployment assets**.\n   **Missing:** **Redundant with other Hire Feed roles**—apply only if you prefer hybrid work over remote.\n   **Apply:** [LinkedIn](https://pk.linkedin.com/jobs/view/machine-learning-ai-engineer-hybrid-at-hire-feed-4434724165)\n\n---\n\n### **9. Lead Analyst, Geospatial Data at TekMinds International**\n   **Match Score: 70/100**\n   **Why:** **Data Analyst role** with **Python, Pandas, and ML exposure** (Random Forest/Logistic Regression). Your **TF-IDF** could apply to **text-heavy geospatial metadata**.\n   **Missing:** **Critical gap in geospatial tools** (e.g., GIS, GeoPandas, Rasterio)—your skills are **foundational but not specialized**.\n   **Apply:** [LinkedIn](https://pk.linkedin.com/jobs/view/lead-analyst-geospatial-data-at-tekminds-international-4436319237)\n\n---\n\n### **10. Machine Learning (AI) Engineer (Hybrid) at Hire Feed (Duplicate)**\n   **Match Score: 75/100**\n   **Why:** **Identical to #8**—same skills, same company. Only apply if you **prioritize hybrid work** or have a preference for this specific posting.\n   **Missing:** **No unique differentiator** over other Hire Feed roles.\n   **Apply:** [LinkedIn](https://pk.linkedin.com/jobs/view/machine-learning-ai-engineer-hybrid-at-hire-feed-4435514024)\n\n---\n\n### **Key Takeaways for Lahore Candidates:**\n1. **Top 3 Picks (90%+ Match):**\n   - **ByteCrew (AI Engineer L2)** for **GenAI/ML deployment** (highest pay).\n   - **Taraki (Oil & Gas Data Scientist)** for **industry specialization**.\n   - **Hire Feed (ML Engineer - Remote)** for **flexibility**.\n\n2. **Avoid Unless Necessary:**\n   - **TekMinds (Geospatial)**—your skills don’t align with the niche.\n   - **Duplicate Hire Feed roles**—apply only if you have a reason to prefer hybrid/remote.\n\n3. **Leverage Your Strengths:**\n   - **TF-IDF/Cosine Similarity** → Highlight for **NLP/Data Science roles** (e.g., Taraki, Recruitzz).\n   - **FastAPI/Streamlit** → Emphasize for **MLOps/Deployment-focused jobs** (e.g., ByteCrew, Hire Feed).\n\n4. **Lahore-Specific Tip:**\n   - **ByteCrew and Recruitzz** are Lahore-based—prioritize these for **local networking** and **work-life balance**.\n\nWould you like help tailoring your resume for any of these roles?",
+  "ranked_matches": "Here’s the ranked list of the **TOP 10 jobs** from **BEST to WORST match** based on skill overlap, adjusted for relevance to your profile (mid-level ML/Data roles in Lahore/Pakistan):\n\n---\n\n### **1. AI Engineer L2 (Python ML / GenAI) at ByteCrew**\n   **Match Score: 95/100**\n   **Why:** Perfect fit for **Machine Learning Engineer/MLOps** roles—your **Python, Scikit-Learn, TF-IDF, Cosine Similarity, and FastAPI** align with GenAI/ML deployment needs, and **Streamlit** is a bonus for prototyping.\n   **Missing:** Slightly less emphasis on traditional **Random Forest/Logistic Regression** (though still relevant), but GenAI tools (e.g., LLMs) are a **higher priority** here.\n   **Apply:** [LinkedIn](https://pk.linkedin.com/jobs/view/ai-engineer-l2-%C2%B7-4%2B-years-python-ml-genai-at-bytecrew-4408958576)\n\n---\n\n### **2. Machine Learning Engineer - AI (Remote) at Hire Feed**\n   **Match Score: 92/100**\n   **Why:** **Core ML Engineer role** with **Python, Scikit-Learn, Pandas, TF-IDF, and FastAPI**—your skills match **model development + deployment** (Streamlit/FastAPI are assets).\n   **Missing:** No explicit mention of **MLOps pipelines** (e.g., Docker, Kubernetes), but your **FastAPI** experience compensates.\n   **Apply:** [LinkedIn](https://pk.linkedin.com/jobs/view/machine-learning-engineer-ai-remote-at-hire-feed-4434725484)\n\n---\n\n### **3. Artificial Intelligence Engineer, LearnWith.AI (Remote) at Crossover**\n   **Match Score: 90/100**\n   **Why:** **High-paying ($200K/year)** **ML Engineer** role with **Python, Scikit-Learn, and TF-IDF**—your **Streamlit/FastAPI** align with **AI tooling** (e.g., educational platforms).\n   **Missing:** Requires **4+ years of experience** (you’re mid-level), but your **TF-IDF/Cosine Similarity** (NLP) and **Logistic Regression** make you competitive.\n   **Apply:** [LinkedIn](https://pk.linkedin.com/jobs/view/artificial-intelligence-engineer-learnwith-ai-remote-%24200-000-year-usd-at-crossover-4431434060)\n\n---\n\n### **4. Data Scientist - AI/ML (Remote) at Hire Feed**\n   **Match Score: 88/100**\n   **Why:** **Classic Data Scientist role**—your **Python, Pandas, NumPy, Random Forest, and TF-IDF** are **directly applicable** to modeling/analysis.\n   **Missing:** Lacks **MLOps/deployment focus** (Streamlit/FastAPI are underutilized here), but **remote** and **AI/ML-specific**.\n   **Apply:** [LinkedIn](https://pk.linkedin.com/jobs/view/data-scientist-ai-ml-remote-at-hire-feed-4434924820)\n\n---\n\n### **5. Artificial Intelligence Specialist at Recruitzz (Lahore)**\n   **Match Score: 87/100**\n   **Why:** **Lahore-based** **ML Engineer** role with **Python, Scikit-Learn, and TF-IDF**—your **Cosine Similarity** (NLP) and **Logistic Regression** are **highly relevant**.\n   **Missing:** No mention of **FastAPI/Streamlit** (though not critical), and **local Lahore role** may have lower pay than remote options.\n   **Apply:** [LinkedIn](https://pk.linkedin.com/jobs/view/artificial-intelligence-specialist-at-recruitzz-4431505029)\n\n---\n\n### **6. Machine Learning Researcher (Remote) at Hire Feed**\n   **Match Score: 85/100**\n   **Why:** **Research-focused** but your **Python, Scikit-Learn, and Random Forest** are **foundational** for ML experiments.\n   **Missing:** Requires **strong theoretical knowledge** (e.g., deep learning, research papers)—your **Streamlit/FastAPI** are **less critical** here.\n   **Apply:** [LinkedIn](https://pk.linkedin.com/jobs/view/machine-learning-researcher-remote-at-hire-feed-4434488174)\n\n---\n\n### **7. Data Scientist (Oil & Gas Industry) at Taraki (Lahore)**\n   **Match Score: 83/100**\n   **Why:** **Industry-specific** (Oil & Gas) but your **Python, Pandas, and TF-IDF** are **transferable** to domain-specific modeling.\n   **Missing:** **No mention of ML deployment** (Streamlit/FastAPI not required), and **industry niche** may limit flexibility.\n   **Apply:** [LinkedIn](https://pk.linkedin.com/jobs/view/data-scientist-oil-gas-industry-codebyte-at-taraki-4432204841)\n\n---\n\n### **8. Machine Learning (AI) Engineer (Hybrid) at Hire Feed**\n   **Match Score: 80/100**\n   **Why:** **Hybrid role** with **Python, Scikit-Learn, and TF-IDF**—your **FastAPI** experience is a **plus for API-based ML**.\n   **Missing:** **Less emphasis on deployment** than other Hire Feed roles, and **hybrid** may require local presence.\n   **Apply:** [LinkedIn](https://pk.linkedin.com/jobs/view/machine-learning-ai-engineer-hybrid-at-hire-feed-4434724165)\n\n---\n\n### **9. Lead Analyst, Geospatial Data at TekMinds (Karachi)**\n   **Match Score: 70/100**\n   **Why:** **Pandas/NumPy + TF-IDF** are **useful for geospatial text/data**, but **not a strong fit** for your core ML skills.\n   **Missing:** **Lacks Python ML libraries** (e.g., Scikit-Learn, Random Forest) and **geospatial tools** (e.g., GeoPandas, GIS).\n   **Apply:** [LinkedIn](https://pk.linkedin.com/jobs/view/lead-analyst-geospatial-data-at-tekminds-international-4436319237)\n\n---\n\n### **10. Machine Learning (AI) Engineer (Hybrid) at Hire Feed (Duplicate)**\n   **Match Score: 75/100**\n   **Why:** **Same as #8**, but listed twice—**redundant** and **lower priority**.\n   **Missing:** **No unique value** over other Hire Feed roles.\n   **Apply:** [LinkedIn](https://pk.linkedin.com/jobs/view/machine-learning-ai-engineer-hybrid-at-hire-feed-4435514024)\n\n---\n\n### **Key Takeaways:**\n1. **Top 3 (90%+ match)** are **AI Engineer (ByteCrew), ML Engineer (Hire Feed), and AI Engineer (Crossover)**—**prioritize these** for **highest relevance**.\n2. **Lahore-based roles (Recruitzz, Taraki)** are **good but less competitive** than remote/high-paying options.\n3. **Avoid geospatial (TekMinds)** unless you’re open to **relearning tools** (e.g., GIS).\n4. **FastAPI/Streamlit** are **assets for MLOps/ML Engineer roles**—highlight them in applications.\n\n**Next Steps:**\n- **Tailor your resume** to emphasize **TF-IDF, Cosine Similarity, and FastAPI** for **ML Engineer** roles.\n- **Apply to ByteCrew and Crossover first** (highest pay + relevance).\n- **Negotiate for Lahore roles** if remote options don’t work out.",
   "cover_letters_generated": 0,
   "jobs": [
     {
@@ -49,7 +49,7 @@
       "description": "Job Title: Artificial Intelligence Engineer, LearnWith.AI (Remote) - $200,000/year USD | Company: Crossover | Location: Rawalpindi, Punjab, Pakistan",
       "semantic_score": -28.4,
       "score": 75,
-      "match_reason": "Strong alignment with **Machine Learning Engineer** and **MLOps Engineer** roles due to Python, Scikit-Learn, Pandas, NumPy, Random Forest, Logistic Regression, and TF-IDF/Cosine Similarity expertise. Streamlit/FastAPI also support ML deployment and tooling relevance.",
+      "match_reason": "Strong alignment with **Machine Learning Engineer** and **MLOps Engineer** roles. Candidate's skills in **Python, Scikit-Learn, Pandas, NumPy, Random Forest, Logistic Regression, TF-IDF Vectorization, Cosine Similarity** directly support ML model development, feature engineering, and evaluation. **Streamlit/FastAPI** align with deployment and MLOps pipelines. High relevance for AI-focused roles.",
       "final_score": 33.64,
       "ai_score": 75
     },
@@ -61,7 +61,7 @@
       "description": "Job Title: Artificial Intelligence Specialist | Company: Recruitzz | Location: Lahore, Punjab, Pakistan",
       "semantic_score": -29.8,
       "score": 75,
-      "match_reason": "Strong alignment with **Machine Learning Engineer** and **Data Scientist** roles due to Python, Scikit-Learn, Pandas, NumPy, Random Forest, Logistic Regression, and TF-IDF/Cosine Similarity expertise. Streamlit/FastAPI add relevance for deployment/MLOps aspects.",
+      "match_reason": "Strong alignment with **Machine Learning Engineer** and **Data Scientist** roles due to Python, Scikit-Learn, Pandas, NumPy, Random Forest, Logistic Regression, and TF-IDF/Cosine Similarity expertise. Streamlit/FastAPI add relevance for deployment/MLOps aspects, though not core to the 'AI Specialist' title. High technical fit for ML-heavy roles.",
       "final_score": 33.08,
       "ai_score": 75
     },
@@ -73,7 +73,7 @@
       "description": "Job Title: Data Scientist (Oil & Gas Industry) - CodeByte | Company: Taraki | Location: Lahore, Punjab, Pakistan",
       "semantic_score": -30.6,
       "score": 75,
-      "match_reason": "Candidate has strong ML/data science skills (Python, Scikit-Learn, Pandas, NumPy, Random Forest, Logistic Regression) and relevant NLP/text processing (TF-IDF, Cosine Similarity). Streamlit/FastAPI align with data science deployment needs. Highly relevant for Data Scientist role.",
+      "match_reason": "Candidate has strong ML/data science skills (Python, Scikit-Learn, Pandas, NumPy, Random Forest, Logistic Regression) and relevant tools (TF-IDF, Cosine Similarity) for data analysis and modeling in the Oil & Gas industry. Streamlit/FastAPI align with data science deployment needs.",
       "final_score": 32.76,
       "ai_score": 75
     },
@@ -85,7 +85,7 @@
       "description": "Job Title: AI Engineer L2 · 4+ years (Python ML / GenAI) | Company: ByteCrew | Location: Lahore, Punjab, Pakistan",
       "semantic_score": -31.3,
       "score": 75,
-      "match_reason": "Strong alignment with **AI Engineer (ML/GenAI)** role: Python, ML libraries (Scikit-Learn, Random Forest, Logistic Regression), and deployment tools (FastAPI) are highly relevant. TF-IDF/Cosine Similarity and Streamlit also support GenAI/NLP tasks.",
+      "match_reason": "Candidate has strong Python ML expertise (Scikit-Learn, Random Forest, Logistic Regression) and GenAI-relevant skills (TF-IDF, Cosine Similarity). Streamlit/FastAPI align with AI engineering tooling needs.",
       "final_score": 32.48,
       "ai_score": 75
     },
@@ -97,7 +97,7 @@
       "description": "Job Title: Machine Learning Researcher (Remote) | Company: Hire Feed | Location: Pakistan",
       "semantic_score": -31.9,
       "score": 75,
-      "match_reason": "Candidate has strong ML skills (Scikit-Learn, Random Forest, Logistic Regression, TF-IDF, Cosine Similarity) and relevant tools (Python, Pandas, NumPy). Streamlit/FastAPI align with research/deployment needs, though not core for this role.",
+      "match_reason": "Strong alignment with **Machine Learning Engineer** and **Data Scientist** roles. Candidate's skills (Python, Scikit-Learn, Pandas, NumPy, TF-IDF, Cosine Similarity, Random Forest, Logistic Regression) directly match core ML/DL tasks. Streamlit/FastAPI add relevance for prototyping/deployment, though not critical for research. High relevance for **ML Researcher** due to foundational ML expertise.",
       "final_score": 32.24,
       "ai_score": 75
     },
@@ -109,7 +109,7 @@
       "description": "Job Title: Machine Learning Engineer - AI (Remote) | Company: Hire Feed | Location: Pakistan",
       "semantic_score": -33.1,
       "score": 75,
-      "match_reason": "Strong alignment with **Machine Learning Engineer** role: Python, Scikit-Learn, Pandas, NumPy, Random Forest, Logistic Regression, and ML-related vectorization (TF-IDF, Cosine Similarity) are highly relevant. Streamlit/FastAPI add deployment/MLOps value.",
+      "match_reason": "Strong alignment with **Machine Learning Engineer** role: Python, Scikit-Learn, Pandas, NumPy, Random Forest, Logistic Regression, and TF-IDF/Cosine Similarity (NLP/ML relevance) are core ML skills. Streamlit/FastAPI add deployment/MLOps value.",
       "final_score": 31.76,
       "ai_score": 75
     },
@@ -121,7 +121,7 @@
       "description": "Job Title: Machine Learning (AI) Engineer (Hybrid) | Company: Hire Feed | Location: Pakistan",
       "semantic_score": -34.5,
       "score": 75,
-      "match_reason": "Candidate has strong ML engineering skills (Python, Scikit-Learn, Random Forest, Logistic Regression, TF-IDF, Cosine Similarity) and relevant tools (FastAPI for deployment, Streamlit for prototyping). Aligns well with ML/AI engineering roles.",
+      "match_reason": "Candidate has strong ML/DL skills (Python, Scikit-Learn, Random Forest, Logistic Regression) and relevant tools (Pandas, NumPy, TF-IDF, Cosine Similarity) for ML engineering. Streamlit/FastAPI align with hybrid ML deployment needs.",
       "final_score": 31.2,
       "ai_score": 75
     },
@@ -133,7 +133,7 @@
       "description": "Job Title: Machine Learning (AI) Engineer (Hybrid) | Company: Hire Feed | Location: Pakistan",
       "semantic_score": -34.5,
       "score": 75,
-      "match_reason": "Strong alignment with **Machine Learning Engineer** role: Python, Scikit-Learn, Pandas, NumPy, Random Forest, Logistic Regression, and TF-IDF/Cosine Similarity (NLP/ML relevance) are core ML skills. Streamlit/FastAPI add deployment/MLOps utility.",
+      "match_reason": "Candidate has strong alignment with **Machine Learning Engineer** role, covering core ML skills (Scikit-Learn, Random Forest, Logistic Regression, TF-IDF/Cosine Similarity) and relevant tools (Python, Pandas, NumPy). Streamlit/FastAPI also support deployment and API integration, critical for ML engineering.",
       "final_score": 31.2,
       "ai_score": 75
     },
@@ -145,98 +145,17 @@
       "description": "Job Title: Lead Analyst, Geospatial Data | Company: TekMinds International | Location: Karāchi, Sindh, Pakistan",
       "semantic_score": -32.4,
       "score": 65,
-      "match_reason": "Candidate has strong Python, Pandas, and NumPy skills (core for data analysis), with exposure to ML techniques (Random Forest, Logistic Regression) and data processing (TF-IDF, Cosine Similarity). Streamlit/FastAPI indicate potential for visualization/automation, though geospatial-specific tools (e.g., GIS, GeoPandas) are missing. Relevance is moderate-high due to overlap in analytical/data science foundations.",
+      "match_reason": "Candidate has strong Python, Pandas, and NumPy skills (core for data analysis), along with TF-IDF/Cosine Similarity (relevant for geospatial text/data processing). Streamlit/FastAPI could support visualization/automation, though geospatial-specific tools (e.g., GIS, GeoPandas) are missing. Overall, skills align well with analytical tasks but lack specialized geospatial expertise.",
       "final_score": 26.04,
       "ai_score": 65
     }
   ],
   "all_jobs": [
     {
-      "title": "Software Engineer - Python",
-      "company": "Devsinc",
-      "location": "Lahore, Punjab, Pakistan",
-      "url": "https://pk.linkedin.com/jobs/view/software-engineer-python-at-devsinc-4410516362",
-      "snippet": "",
-      "source": "LinkedIn",
-      "posted_within": "any"
-    },
-    {
       "title": "Junior Python Developer",
       "company": "Translation Empire PK",
       "location": "Rawalpindi, Punjab, Pakistan",
       "url": "https://pk.linkedin.com/jobs/view/junior-python-developer-at-translation-empire-pk-4412542805",
-      "snippet": "",
-      "source": "LinkedIn",
-      "posted_within": "any"
-    },
-    {
-      "title": "Python Developer",
-      "company": "ZZ Technologies Islamabad",
-      "location": "Islamabad, Islāmābād, Pakistan",
-      "url": "https://pk.linkedin.com/jobs/view/python-developer-at-zz-technologies-islamabad-4434522514",
-      "snippet": "",
-      "source": "LinkedIn",
-      "posted_within": "any"
-    },
-    {
-      "title": "Full Stack Python Developer",
-      "company": "Tiksom Limited",
-      "location": "Johar Town, Punjab, Pakistan",
-      "url": "https://pk.linkedin.com/jobs/view/full-stack-python-developer-at-tiksom-limited-4245302811",
-      "snippet": "",
-      "source": "LinkedIn",
-      "posted_within": "any"
-    },
-    {
-      "title": "Software Developer - Python (Remote)",
-      "company": "Hire Feed",
-      "location": "Pakistan",
-      "url": "https://pk.linkedin.com/jobs/view/software-developer-python-remote-at-hire-feed-4437729603",
-      "snippet": "",
-      "source": "LinkedIn",
-      "posted_within": "any"
-    },
-    {
-      "title": "Python Engineer",
-      "company": "SME Careers",
-      "location": "Pakistan",
-      "url": "https://pk.linkedin.com/jobs/view/python-engineer-at-sme-careers-4424785734",
-      "snippet": "",
-      "source": "LinkedIn",
-      "posted_within": "any"
-    },
-    {
-      "title": "Senior Python Developer",
-      "company": "Devsinc",
-      "location": "Lahore, Punjab, Pakistan",
-      "url": "https://pk.linkedin.com/jobs/view/senior-python-developer-at-devsinc-4431690903",
-      "snippet": "",
-      "source": "LinkedIn",
-      "posted_within": "any"
-    },
-    {
-      "title": "Backend Engineer, PAKISTAN",
-      "company": "nsave",
-      "location": "Pakistan",
-      "url": "https://pk.linkedin.com/jobs/view/backend-engineer-pakistan-at-nsave-4431877308",
-      "snippet": "",
-      "source": "LinkedIn",
-      "posted_within": "any"
-    },
-    {
-      "title": "Senior Software Engineer - Python",
-      "company": "Devsinc",
-      "location": "Lahore, Punjab, Pakistan",
-      "url": "https://pk.linkedin.com/jobs/view/senior-software-engineer-python-at-devsinc-4413291697",
-      "snippet": "",
-      "source": "LinkedIn",
-      "posted_within": "any"
-    },
-    {
-      "title": "Python Game Developer (Panda3D)",
-      "company": "Gramian Consulting",
-      "location": "Pakistan",
-      "url": "https://pk.linkedin.com/jobs/view/python-game-developer-panda3d-at-gramian-consulting-4434753168",
       "snippet": "",
       "source": "LinkedIn",
       "posted_within": "any"
@@ -251,28 +170,19 @@
       "posted_within": "any"
     },
     {
-      "title": "Full Stack Engineer - Python+React",
-      "company": "Creative Chaos",
-      "location": "Pakistan",
-      "url": "https://pk.linkedin.com/jobs/view/full-stack-engineer-python%2Breact-at-creative-chaos-4412548510",
-      "snippet": "",
-      "source": "LinkedIn",
-      "posted_within": "any"
-    },
-    {
-      "title": "Senior Python Developer - Web Scraper | BeautifulSoup or Scrapy",
-      "company": "NielsenIQ",
-      "location": "Karāchi, Sindh, Pakistan",
-      "url": "https://pk.linkedin.com/jobs/view/senior-python-developer-web-scraper-beautifulsoup-or-scrapy-at-nielseniq-4432243304",
-      "snippet": "",
-      "source": "LinkedIn",
-      "posted_within": "any"
-    },
-    {
       "title": "Junior Back End Developer",
       "company": "Translation Empire PK",
       "location": "Islamabad, Islāmābād, Pakistan",
       "url": "https://pk.linkedin.com/jobs/view/junior-back-end-developer-at-translation-empire-pk-4410016791",
+      "snippet": "",
+      "source": "LinkedIn",
+      "posted_within": "any"
+    },
+    {
+      "title": "Backend Developer",
+      "company": "Datamatics Technologies",
+      "location": "Islamabad, Islāmābād, Pakistan",
+      "url": "https://pk.linkedin.com/jobs/view/backend-developer-at-datamatics-technologies-4408879405",
       "snippet": "",
       "source": "LinkedIn",
       "posted_within": "any"
@@ -285,10 +195,100 @@
       "snippet": "",
       "source": "LinkedIn",
       "posted_within": "any"
+    },
+    {
+      "title": "Principal Software Engineer - Python",
+      "company": "Creative Chaos",
+      "location": "Islamabad, Islāmābād, Pakistan",
+      "url": "https://pk.linkedin.com/jobs/view/principal-software-engineer-python-at-creative-chaos-4412556360",
+      "snippet": "",
+      "source": "LinkedIn",
+      "posted_within": "any"
+    },
+    {
+      "title": "Backend Developer",
+      "company": "iGate Technologies Pakistan",
+      "location": "Islamabad, Islāmābād, Pakistan",
+      "url": "https://pk.linkedin.com/jobs/view/backend-developer-at-igate-technologies-pakistan-4362800152",
+      "snippet": "",
+      "source": "LinkedIn",
+      "posted_within": "any"
+    },
+    {
+      "title": "Full Stack AI Developer",
+      "company": "Flatgigs",
+      "location": "Islamabad, Islāmābād, Pakistan",
+      "url": "https://pk.linkedin.com/jobs/view/full-stack-ai-developer-at-flatgigs-4410979475",
+      "snippet": "",
+      "source": "LinkedIn",
+      "posted_within": "any"
+    },
+    {
+      "title": "Senior Python Automation Engineer (Agentic AI)",
+      "company": "Edge",
+      "location": "Islamabad, Islāmābād, Pakistan",
+      "url": "https://pk.linkedin.com/jobs/view/senior-python-automation-engineer-agentic-ai-at-edge-4433189784",
+      "snippet": "",
+      "source": "LinkedIn",
+      "posted_within": "any"
+    },
+    {
+      "title": "Senior Full Stack Engineer, AI Builder",
+      "company": "CoverGo | Insurtech",
+      "location": "Islamabad, Islāmābād, Pakistan",
+      "url": "https://pk.linkedin.com/jobs/view/senior-full-stack-engineer-ai-builder-at-covergo-insurtech-4432238635",
+      "snippet": "",
+      "source": "LinkedIn",
+      "posted_within": "any"
+    },
+    {
+      "title": "Full-Stack Engineer",
+      "company": "Darkroom",
+      "location": "Islamabad, Islāmābād, Pakistan",
+      "url": "https://pk.linkedin.com/jobs/view/full-stack-engineer-at-darkroom-4427079735",
+      "snippet": "",
+      "source": "LinkedIn",
+      "posted_within": "any"
+    },
+    {
+      "title": "Senior Python Engineer",
+      "company": "SkyLabs AI",
+      "location": "Islamabad, Islāmābād, Pakistan",
+      "url": "https://pk.linkedin.com/jobs/view/senior-python-engineer-at-skylabs-ai-4384582559",
+      "snippet": "",
+      "source": "LinkedIn",
+      "posted_within": "any"
+    },
+    {
+      "title": "Senior Python Automation Engineer",
+      "company": "Edge",
+      "location": "Islamabad, Islāmābād, Pakistan",
+      "url": "https://pk.linkedin.com/jobs/view/senior-python-automation-engineer-at-edge-4428969809",
+      "snippet": "",
+      "source": "LinkedIn",
+      "posted_within": "any"
+    },
+    {
+      "title": "Senior Python Automation Engineer (Healthcare)",
+      "company": "Edge",
+      "location": "Islamabad, Islāmābād, Pakistan",
+      "url": "https://pk.linkedin.com/jobs/view/senior-python-automation-engineer-healthcare-at-edge-4427347787",
+      "snippet": "",
+      "source": "LinkedIn",
+      "posted_within": "any"
+    },
+    {
+      "title": "Laravel Full Stack Developer",
+      "company": "Hybrid Mediaworks",
+      "location": "Islamabad, Islāmābād, Pakistan",
+      "url": "https://pk.linkedin.com/jobs/view/laravel-full-stack-developer-at-hybrid-mediaworks-4434625270",
+      "snippet": "",
+      "source": "LinkedIn",
+      "posted_within": "any"
     }
   ],
   "semantic_search_used": true,
-  "vector_db_jobs": 516,
+  "vector_db_jobs": 619,
   "search_keywords_used": [
     "Python Engineer"
   ],
