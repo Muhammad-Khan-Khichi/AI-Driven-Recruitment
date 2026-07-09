@@ -39,8 +39,12 @@ oauth.register(
 
 
 def _get_redirect_uri(request: Request, provider: str) -> str:
-    """Build accurate OAuth callback URL from the actual request."""
-    return f"{request.url.scheme}://{request.url.netloc}/api/auth/{provider}/callback"
+    """Build accurate OAuth callback URL from the actual request.
+    Force https explicitly — HF Spaces sits behind a proxy, and
+    request.url.scheme can come through as 'http' even though the
+    public-facing request was https, causing Google's exact-match
+    redirect_uri check to fail."""
+    return f"https://{request.url.netloc}/api/auth/{provider}/callback"
 
 
 def _get_or_create_user(db: Session, email: str, name: str, picture: str, 
