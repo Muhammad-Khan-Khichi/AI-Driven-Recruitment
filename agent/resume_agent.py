@@ -94,8 +94,8 @@ class JobFinderAgent:
         unique_jobs = deduplicate_jobs(all_jobs)
         logger.info(f"  Total unique jobs fetched: {safe_len(unique_jobs)}")
 
-        # ─── Step 4: Semantic search via ChromaDB ────────────
-        logger.info("[4/5] Running semantic search (ChromaDB + sentence-transformers)")
+        # ─── Step 4: Semantic search via Qdrant ──────────────
+        logger.info("[4/5] Running semantic search (Qdrant + sentence-transformers)")
 
         job_store = None
         self.last_vector_stats = {"total_jobs": 0}
@@ -131,8 +131,8 @@ class JobFinderAgent:
                     "company": sem_job.get("company", ""),
                     "url": sem_job.get("url", ""),
                     "location": sem_job.get("location", ""),
-                    "description": sem_job.get("document", "")[:1000],
-                    "semantic_score": sem_job.get("similarity_score", 0) * 100
+                    "description": sem_job.get("description", "")[:1000],   # ✅ FIXED (was "document")
+                    "semantic_score": sem_job.get("semantic_score", 0) * 100  # ✅ FIXED (was "similarity_score")
                 })
         else:
             jobs_for_ai_ranking = unique_jobs[:10]
@@ -146,7 +146,7 @@ class JobFinderAgent:
             sem_score = 0
             for s in semantic_results:
                 if s.get("url") == job.get("url") or s.get("title") == job.get("title"):
-                    sem_score = s.get("similarity_score", 0) * 100
+                    sem_score = s.get("semantic_score", 0) * 100   # ✅ FIXED (was "similarity_score")
                     break
 
             ai_score = job.get("score", 0) or job.get("match_score", 0)
@@ -174,7 +174,8 @@ class JobFinderAgent:
                 resume_store.add_resume(
                     user_id=user_id,
                     resume_text=resume_text,
-                    skills=profile.get("skills", [])
+                    skills=profile.get("skills", []),
+                    roles=profile.get("job_titles", [])   # ✅ FIXED (was missing)
                 )
                 logger.info(f"  Resume stored in vector DB for user {user_id}")
             except Exception as e:
@@ -194,7 +195,7 @@ class JobFinderAgent:
             "semantic_search_used": safe_len(semantic_results) > 0,
             "vector_db_jobs": self.last_vector_stats.get("total_jobs", 0) if self.last_vector_stats else 0,
             "search_keywords_used": search_terms,
-            "time_filter": time_filter   # ✅ NEW: pass through to frontend
+            "time_filter": time_filter   # ✅ NEW
         }
 
         save_results(results, settings.OUTPUT_FILE)

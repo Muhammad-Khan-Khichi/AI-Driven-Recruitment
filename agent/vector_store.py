@@ -51,6 +51,13 @@ def get_embedding_model() -> SentenceTransformer:
     return _embedding_model
 
 
+def _get_vector_size(model: SentenceTransformer) -> int:
+    """Get embedding dimension, compatible with old and new sentence-transformers versions."""
+    if hasattr(model, "get_embedding_dimension"):
+        return model.get_embedding_dimension()
+    return model.get_sentence_embedding_dimension()
+
+
 def embed_text(text: str) -> List[float]:
     """Embed a single text into a vector."""
     model = get_embedding_model()
@@ -85,7 +92,7 @@ class JobVectorStore:
     def __init__(self):
         self.client = get_qdrant_client()
         self.collection_name = JOBS_COLLECTION
-        vector_size = get_embedding_model().get_sentence_embedding_dimension()
+        vector_size = _get_vector_size(get_embedding_model())
         _ensure_collection(self.client, self.collection_name, vector_size)
 
     def _scroll_all(self):
@@ -190,7 +197,8 @@ class JobVectorStore:
                 query_filter=qfilter,
                 limit=n_results,
             )
-        except Exception:
+        except Exception as e:
+            print(f"QDRANT SEARCH ERROR: {e}")
             return []
 
         jobs = []
@@ -228,11 +236,12 @@ class ResumeVectorStore:
     def __init__(self):
         self.client = get_qdrant_client()
         self.collection_name = RESUMES_COLLECTION
-        vector_size = get_embedding_model().get_sentence_embedding_dimension()
+        vector_size = _get_vector_size(get_embedding_model())
         _ensure_collection(self.client, self.collection_name, vector_size)
 
-    def add_resume(self, user_id: int, resume_text: str, skills: List[str], roles: List[str]):
+    def add_resume(self, user_id: int, resume_text: str, skills: List[str], roles: List[str] = None):
         """Add or update a user resume in vector store."""
+        roles = roles or []
         embedding = embed_text(resume_text)
 
         point = PointStruct(
