@@ -3,11 +3,19 @@ from datetime import datetime
 from sqlalchemy import create_engine, Column, Integer, String, Text, Float, DateTime, ForeignKey, Boolean, JSON
 from sqlalchemy.orm import declarative_base, sessionmaker, relationship
 
-\
-DB_PATH = os.environ.get("DB_PATH", "/tmp/app.db")
-DATABASE_URL = f"sqlite:///{DB_PATH}"
 
-engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+# Use DATABASE_URL (Neon Postgres in production) if set.
+# Falls back to local SQLite ONLY when DATABASE_URL isn't provided (local dev).
+DATABASE_URL = os.environ.get("DATABASE_URL")
+
+if DATABASE_URL:
+    # Postgres — no special connect_args needed
+    engine = create_engine(DATABASE_URL)
+else:
+    DB_PATH = os.environ.get("DB_PATH", "/tmp/app.db")
+    DATABASE_URL = f"sqlite:///{DB_PATH}"
+    engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
