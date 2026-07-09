@@ -11,7 +11,7 @@ pinned: false
 
 **AI-powered job search platform — from resume upload to interview-ready, end to end.**
 
-🔗 Live demo: [https://muhammadkhankhihci-hireai.hf.space](https://ai-driven-recruitment-frontend.vercel.app/)
+🔗 Live demo: [HireAI](https://ai-driven-recruitment-frontend.vercel.app/)
 
 ---
 
