@@ -56,6 +56,7 @@ class Resume(Base):
     user_id = Column(Integer, ForeignKey("users.id"))
     filename = Column(String, nullable=False)
     file_path = Column(String, nullable=True)
+    file_hash = Column(String, index=True, nullable=True)
     parsed_text = Column(Text)
     extracted_skills = Column(Text)
     extracted_roles = Column(Text)
