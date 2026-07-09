@@ -193,16 +193,17 @@ class JobVectorStore:
         try:
             response = self.client.query_points(
                 collection_name=self.collection_name,
-                query_vector=query_embedding,
+                query=query_embedding,
                 query_filter=qfilter,
                 limit=n_results,
             )
+            results = response.points
         except Exception as e:
             print(f"QDRANT SEARCH ERROR: {e}")
             return []
 
         jobs = []
-        for point in response:
+        for point in results:
             payload = point.payload or {}
             jobs.append({
                 "title": payload.get("title", ""),
