@@ -191,7 +191,7 @@ class JobVectorStore:
             qfilter = Filter(must=[FieldCondition(key="remote", match=MatchValue(value=filter_remote))])
 
         try:
-            results = self.client.search(
+            response = self.client.query_points(
                 collection_name=self.collection_name,
                 query_vector=query_embedding,
                 query_filter=qfilter,
@@ -202,7 +202,7 @@ class JobVectorStore:
             return []
 
         jobs = []
-        for point in results:
+        for point in response:
             payload = point.payload or {}
             jobs.append({
                 "title": payload.get("title", ""),
