@@ -1,35 +1,13 @@
-from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File
-from fastapi.responses import JSONResponse
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
-from PIL import Image
-from io import BytesIO
-import os
-import uuid
 
 from database.db import get_db, User
 from api.auth import get_current_user
 
 router = APIRouter(prefix="/api/profile", tags=["profile"])
-
-# ─────────────────────────────────────────────────────────────
-# Avatar Configuration
-# ─────────────────────────────────────────────────────────────
-ALLOWED_AVATAR_TYPES = {
-    "image/jpeg",
-    "image/jpg",
-    "image/png",
-    "image/gif",
-    "image/webp",
-}
-MAX_AVATAR_SIZE = 5 * 1024 * 1024  # 5MB
-AVATAR_DIR = "uploads/avatars"
-AVATAR_MAX_DIMENSION = 500
-AVATAR_QUALITY = 85
-
-os.makedirs(AVATAR_DIR, exist_ok=True)
 
 
 # ─────────────────────────────────────────────────────────────
@@ -50,12 +28,6 @@ class SetPasswordRequest(BaseModel):
     new_password: str
 
 
-class AvatarUploadResponse(BaseModel):
-    message: str
-    avatar_url: str
-    user: dict
-
-
 class ProfileResponse(BaseModel):
     id: int
     email: str
@@ -68,58 +40,6 @@ class ProfileResponse(BaseModel):
 
     class Config:
         from_attributes = True
-
-
-# ─────────────────────────────────────────────────────────────
-# Helper Functions
-# ─────────────────────────────────────────────────────────────
-def delete_old_avatar(profile_picture_url: str) -> None:
-    """Remove old avatar file from disk if it exists."""
-    if profile_picture_url and profile_picture_url.startswith("/uploads/avatars/"):
-        filepath = profile_picture_url.lstrip("/")
-        if os.path.exists(filepath):
-            try:
-                os.remove(filepath)
-            except Exception:
-                pass
-
-
-def process_avatar_image(image_bytes: bytes, user_id: int) -> str:
-    """Process and save an avatar image, return the URL path."""
-    image = Image.open(BytesIO(image_bytes))
-
-    # Convert RGBA → RGB
-    if image.mode in ("RGBA", "LA", "P"):
-        background = Image.new("RGB", image.size, (255, 255, 255))
-        if image.mode == "P":
-            image = image.convert("RGBA")
-        background.paste(
-            image,
-            mask=image.split()[-1] if image.mode == "RGBA" else None,
-        )
-        image = background
-
-    # Resize keeping aspect ratio
-    image.thumbnail(
-        (AVATAR_MAX_DIMENSION, AVATAR_MAX_DIMENSION),
-        Image.Resampling.LANCZOS,
-    )
-
-    # Center crop to square
-    width, height = image.size
-    min_dim = min(width, height)
-    left = (width - min_dim) // 2
-    top = (height - min_dim) // 2
-    image = image.crop((left, top, left + min_dim, top + min_dim))
-
-    # Generate unique filename
-    filename = f"user_{user_id}_{uuid.uuid4().hex[:8]}.jpg"
-    filepath = os.path.join(AVATAR_DIR, filename)
-
-    # Save as JPEG
-    image.save(filepath, "JPEG", quality=AVATAR_QUALITY, optimize=True)
-
-    return f"/uploads/avatars/{filename}"
 
 
 # ─────────────────────────────────────────────────────────────
@@ -179,114 +99,23 @@ def update_profile(
 
         current_user.username = new_username
 
-    # Update profile picture if provided
+    # Update profile picture if provided (URL only, no file uploads)
     if updates.profile_picture is not None:
         url = updates.profile_picture.strip()
         if url == "":
-            # Empty string = remove picture
-            delete_old_avatar(current_user.profile_picture)
             current_user.profile_picture = None
-        elif url.startswith("/uploads/avatars/"):
-            # Already an uploaded file
-            current_user.profile_picture = url
         elif url.startswith("http://") or url.startswith("https://"):
             current_user.profile_picture = url
         else:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Profile picture must be a valid URL or uploaded file",
+                detail="Profile picture must be a valid URL",
             )
 
     db.commit()
     db.refresh(current_user)
 
     return current_user
-
-
-# ─────────────────────────────────────────────────────────────
-# POST /api/profile/avatar/upload — Upload profile picture
-# ─────────────────────────────────────────────────────────────
-@router.post("/avatar/upload", response_model=AvatarUploadResponse)
-async def upload_avatar(
-    file: UploadFile = File(...),
-    current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_db),
-):
-    """Upload and process profile picture."""
-    
-    # ─── Validate content type ───
-    if file.content_type not in ALLOWED_AVATAR_TYPES:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Invalid file type. Allowed: {', '.join(sorted(ALLOWED_AVATAR_TYPES))}",
-        )
-
-    # ─── Read file ───
-    contents = await file.read()
-
-    # ─── Validate size ───
-    if len(contents) > MAX_AVATAR_SIZE:
-        size_mb = MAX_AVATAR_SIZE / 1024 / 1024
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"File too large. Maximum size is {size_mb}MB",
-        )
-
-    if len(contents) == 0:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Empty file",
-        )
-
-    try:
-        # ─── Process and save image ───
-        avatar_url = process_avatar_image(contents, current_user.id)
-
-        # ─── Delete old avatar if it was an uploaded file ───
-        delete_old_avatar(current_user.profile_picture)
-
-        # ─── Update user record ───
-        current_user.profile_picture = avatar_url
-        db.commit()
-        db.refresh(current_user)
-
-        return {
-            "message": "Avatar uploaded successfully",
-            "avatar_url": avatar_url,
-            "user": {
-                "id": current_user.id,
-                "email": current_user.email,
-                "username": current_user.username,
-                "full_name": current_user.full_name,
-                "profile_picture": current_user.profile_picture,
-                "oauth_provider": current_user.oauth_provider,
-            },
-        }
-
-    except HTTPException:
-        raise
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to process image: {str(e)}",
-        )
-
-
-# ─────────────────────────────────────────────────────────────
-# DELETE /api/profile/avatar — Remove profile picture
-# ─────────────────────────────────────────────────────────────
-@router.delete("/avatar")
-def delete_avatar(
-    current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_db),
-):
-    """Remove the user's profile picture."""
-    
-    delete_old_avatar(current_user.profile_picture)
-    current_user.profile_picture = None
-    db.commit()
-
-    return {"message": "Avatar removed successfully"}
 
 
 # ─────────────────────────────────────────────────────────────
@@ -369,10 +198,7 @@ def delete_account(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    """Delete the current user's account. Also cleans up avatar."""
-    
-    # Clean up avatar file
-    delete_old_avatar(current_user.profile_picture)
+    """Delete the current user's account."""
 
     db.delete(current_user)
     db.commit()
