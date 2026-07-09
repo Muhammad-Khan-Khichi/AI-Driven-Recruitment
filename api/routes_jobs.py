@@ -1,3 +1,4 @@
+import hashlib
 import json
 import os
 import tempfile
@@ -63,11 +64,35 @@ def upload_resume(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """Upload and parse resume PDF. Saves text to DB only."""
+    """Upload and parse resume PDF. Saves text to DB only.
+    If this exact file was already uploaded by this user before,
+    skip re-parsing/re-processing and return the existing record."""
     if not file.filename.endswith(".pdf"):
         raise HTTPException(status_code=400, detail="Only PDF files allowed")
 
     content = file.file.read()
+
+    # ── Compute a hash of the raw file bytes to detect duplicates ──
+    file_hash = hashlib.sha256(content).hexdigest()
+
+    existing = db.query(Resume).filter(
+        Resume.user_id == current_user.id,
+        Resume.file_hash == file_hash
+    ).first()
+
+    if existing:
+        skills = json.loads(existing.extracted_skills) if existing.extracted_skills else []
+        roles = json.loads(existing.extracted_roles) if existing.extracted_roles else []
+        return {
+            "resume_id": existing.id,
+            "filename": existing.filename,
+            "skills": skills,
+            "roles": roles,
+            "parsed_chars": len(existing.parsed_text or ""),
+            "message": "✅ This resume was already uploaded — reusing existing data (no re-processing needed).",
+            "duplicate": True
+        }
+
     suffix = os.path.splitext(file.filename)[1] or ".pdf"
 
     with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
@@ -84,6 +109,7 @@ def upload_resume(
             user_id=current_user.id,
             filename=file.filename,
             file_path=None,
+            file_hash=file_hash,
             parsed_text=text[:5000],
             extracted_skills=json.dumps(profile.get("skills", [])),
             extracted_roles=json.dumps(profile.get("job_titles", []))
@@ -98,7 +124,8 @@ def upload_resume(
             "skills": profile.get("skills", []),
             "roles": profile.get("job_titles", []),
             "parsed_chars": len(text),
-            "message": f"✅ Extracted {len(profile.get('skills', []))} skills (no PDF saved!)"
+            "message": f"✅ Extracted {len(profile.get('skills', []))} skills (no PDF saved!)",
+            "duplicate": False
         }
     finally:
         if os.path.exists(tmp_path):
