@@ -41,7 +41,7 @@ oauth.register(
     client_kwargs={
         'scope': 'openid email profile',
         'token_endpoint_auth_method': 'client_secret_post',
-        }
+    }
 )
 
 
@@ -52,6 +52,22 @@ def _get_redirect_uri(request: Request, provider: str) -> str:
     public-facing request was https, causing Google's exact-match
     redirect_uri check to fail."""
     return f"https://{request.url.netloc}/api/auth/{provider}/callback"
+
+
+def _set_auth_cookie(response: RedirectResponse, jwt_token: str):
+    """Set the JWT as an httpOnly cookie on the redirect response instead
+    of passing it as a URL query parameter. samesite='none' + secure=True
+    is required because frontend (Vercel) and backend (HF Spaces) are on
+    different domains."""
+    response.set_cookie(
+        key="access_token",
+        value=jwt_token,
+        httponly=True,
+        secure=True,
+        samesite="none",
+        max_age=7 * 24 * 60 * 60,  # 7 days
+        path="/",
+    )
 
 
 def _get_or_create_user(db: Session, email: str, name: str, picture: str,
@@ -107,7 +123,6 @@ async def google_login(request: Request):
 async def google_callback(request: Request, db: Session = Depends(get_db)):
     """Handle Google OAuth callback."""
     try:
-        # ✅ DEBUG: Show what we received
         print(f"═══════════════════════════════════════════")
         print(f"🔍 GOOGLE CALLBACK")
         print(f"🔍 Cookies: {dict(request.cookies)}")
@@ -142,7 +157,10 @@ async def google_callback(request: Request, db: Session = Depends(get_db)):
             expires_delta=timedelta(days=7)
         )
 
-        return RedirectResponse(url=f"{FRONTEND_URL}/auth/callback?token={jwt_token}")
+        # ✅ Cookie instead of token in the URL
+        response = RedirectResponse(url=f"{FRONTEND_URL}/auth/callback")
+        _set_auth_cookie(response, jwt_token)
+        return response
 
     except Exception as e:
         print(f"❌ Google OAuth error: {e}")
@@ -166,7 +184,6 @@ async def linkedin_login(request: Request):
 async def linkedin_callback(request: Request, db: Session = Depends(get_db)):
     """Handle LinkedIn OAuth callback."""
     try:
-        # ✅ DEBUG: Show what we received
         print(f"═══════════════════════════════════════════")
         print(f"🔍 LINKEDIN CALLBACK")
         print(f"🔍 Cookies: {dict(request.cookies)}")
@@ -175,7 +192,6 @@ async def linkedin_callback(request: Request, db: Session = Depends(get_db)):
         print(f"🔍 Query: code={bool(request.query_params.get('code'))}")
         print(f"═══════════════════════════════════════════")
 
-        # ✅ Use Authlib for token exchange (handles client_secret automatically)
         token = await oauth.linkedin.authorize_access_token(request)
         access_token = token.get('access_token')
 
@@ -183,7 +199,6 @@ async def linkedin_callback(request: Request, db: Session = Depends(get_db)):
             print(f"❌ No access_token in response: {token}")
             return RedirectResponse(url=f"{FRONTEND_URL}/login?error=linkedin_failed")
 
-        # ✅ Fetch user info using the access token (async, non-blocking)
         async with httpx.AsyncClient() as client:
             userinfo_response = await client.get(
                 'https://api.linkedin.com/v2/userinfo',
@@ -213,7 +228,10 @@ async def linkedin_callback(request: Request, db: Session = Depends(get_db)):
             expires_delta=timedelta(days=7)
         )
 
-        return RedirectResponse(url=f"{FRONTEND_URL}/auth/callback?token={jwt_token}")
+        # ✅ Cookie instead of token in the URL
+        response = RedirectResponse(url=f"{FRONTEND_URL}/auth/callback")
+        _set_auth_cookie(response, jwt_token)
+        return response
 
     except Exception as e:
         print(f"❌ LinkedIn OAuth error: {e}")
