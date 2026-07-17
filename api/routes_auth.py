@@ -1,5 +1,5 @@
 from datetime import timedelta
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Response
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
@@ -18,15 +18,23 @@ class SignupRequest(BaseModel):
     location: str = "Lahore"
 
 
-class TokenResponse(BaseModel):
-    access_token: str
-    token_type: str
-    user_id: int
-    username: str
+def set_auth_cookie(response: Response, jwt_token: str):
+    """Set the JWT as an httpOnly cookie instead of returning it in the body.
+    samesite='none' + secure=True is required because the frontend (Vercel)
+    and backend (HF Spaces) are on different domains."""
+    response.set_cookie(
+        key="access_token",
+        value=jwt_token,
+        httponly=True,
+        secure=True,
+        samesite="none",
+        max_age=7 * 24 * 60 * 60,  # 7 days, matches token expiry below
+        path="/",
+    )
 
 
-@router.post("/signup", response_model=TokenResponse)
-def signup(request: SignupRequest, db: Session = Depends(get_db)):
+@router.post("/signup")
+def signup(request: SignupRequest, response: Response, db: Session = Depends(get_db)):
     # Check if user exists
     if db.query(User).filter(User.email == request.email).first():
         raise HTTPException(status_code=400, detail="Email already registered")
@@ -45,38 +53,44 @@ def signup(request: SignupRequest, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(user)
 
-    # Create token
-    token = create_access_token(data={"sub": user.username})
+    # Create token and set as cookie instead of returning it
+    token = create_access_token(
+        data={"sub": user.username},
+        expires_delta=timedelta(days=7),
+    )
+    set_auth_cookie(response, token)
+
     return {
-        "access_token": token,
-        "token_type": "bearer",
         "user_id": user.id,
-        "username": user.username
+        "username": user.username,
+        "email": user.email,
     }
 
 
-@router.post("/login", response_model=TokenResponse)
-def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-    # ⚡ Accept email OR username!
+@router.post("/login")
+def login(response: Response, form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    # Accept email OR username
     user = db.query(User).filter(
-        (User.email == form_data.username) | 
+        (User.email == form_data.username) |
         (User.username == form_data.username)
     ).first()
-    
+
     if not user or not verify_password(form_data.password, user.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email/username or password"
         )
-    
-    # ⚡ Use email in token (more reliable!)
-    token = create_access_token(data={"sub": user.email})
+
+    token = create_access_token(
+        data={"sub": user.email},
+        expires_delta=timedelta(days=7),
+    )
+    set_auth_cookie(response, token)
+
     return {
-        "access_token": token,
-        "token_type": "bearer",
         "user_id": user.id,
         "username": user.username,
-        "email": user.email  # ← Return email
+        "email": user.email,
     }
 
 
@@ -88,16 +102,17 @@ def get_me(current_user: User = Depends(get_current_user)):
         "username": current_user.username,
         "full_name": current_user.full_name,
         "location": current_user.location,
-        "is_admin": bool(current_user.is_admin),      # ← ADD THIS
-        "is_active": bool(current_user.is_active),    # ← ADD THIS (optional)
-        "created_at": str(current_user.created_at) if current_user.created_at else None  # ← optional
+        "is_admin": bool(current_user.is_admin),
+        "is_active": bool(current_user.is_active),
+        "created_at": str(current_user.created_at) if current_user.created_at else None
     }
 
 
 @router.post("/logout")
-def logout(current_user: User = Depends(get_current_user)):
-    # With JWT, logout is client-side (delete token)
-    # But we can blacklist here if needed
+def logout(response: Response, current_user: User = Depends(get_current_user)):
+    # Clear the cookie server-side — this is the actual "logout" now,
+    # since there's no longer a client-stored token to delete.
+    response.delete_cookie("access_token", path="/")
     return {"message": "Logged out successfully"}
 
 
@@ -105,21 +120,25 @@ class LoginJSONRequest(BaseModel):
     email: str
     password: str
 
+
 @router.post("/login-json")
-def login_json(request: LoginJSONRequest, db: Session = Depends(get_db)):
+def login_json(request: LoginJSONRequest, response: Response, db: Session = Depends(get_db)):
     """Login with JSON body - clean email/password fields!"""
     user = db.query(User).filter(User.email == request.email).first()
-    
+
     if not user or not verify_password(request.password, user.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password"
         )
-    
-    token = create_access_token(data={"sub": user.email})
+
+    token = create_access_token(
+        data={"sub": user.email},
+        expires_delta=timedelta(days=7),
+    )
+    set_auth_cookie(response, token)
+
     return {
-        "access_token": token,
-        "token_type": "bearer",
         "user_id": user.id,
         "username": user.username,
         "email": user.email,
