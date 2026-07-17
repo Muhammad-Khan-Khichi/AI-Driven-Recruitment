@@ -38,7 +38,10 @@ oauth.register(
     access_token_url='https://www.linkedin.com/oauth/v2/accessToken',
     authorize_url='https://www.linkedin.com/oauth/v2/authorization',
     api_base_url='https://api.linkedin.com/v2/',
-    client_kwargs={'scope': 'openid email profile'}
+    client_kwargs={
+        'scope': 'openid email profile',
+        'token_endpoint_auth_method': 'client_secret_post',
+        }
 )
 
 
