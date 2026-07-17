@@ -193,7 +193,8 @@ async def linkedin_callback(request: Request, db: Session = Depends(get_db)):
         print(f"🔍 Query: code={bool(request.query_params.get('code'))}")
         print(f"═══════════════════════════════════════════")
 
-        token = await oauth.linkedin.authorize_access_token(request)
+        params = oauth.linkedin.retrieve_access_token_params(request)
+        token = await oauth.linkedin.fetch_access_token(**params)
         access_token = token.get('access_token')
 
         if not access_token:
