@@ -28,12 +28,16 @@ oauth.register(
     client_kwargs={'scope': 'openid email profile'}
 )
 
-# ✅ Register LinkedIn — uses OpenID Connect discovery (proper config)
+# ✅ Register LinkedIn — hardcoded endpoints (LinkedIn's OIDC discovery
+# endpoint at /oauth/v2/.well-known/openid-configuration 404s, so we skip
+# discovery entirely and point Authlib directly at the known endpoints).
 oauth.register(
     name='linkedin',
     client_id=LINKEDIN_CLIENT_ID,
     client_secret=LINKEDIN_CLIENT_SECRET,
-    server_metadata_url='https://www.linkedin.com/oauth/v2/.well-known/openid-configuration',
+    access_token_url='https://www.linkedin.com/oauth/v2/accessToken',
+    authorize_url='https://www.linkedin.com/oauth/v2/authorization',
+    api_base_url='https://api.linkedin.com/v2/',
     client_kwargs={'scope': 'openid email profile'}
 )
 
@@ -47,7 +51,7 @@ def _get_redirect_uri(request: Request, provider: str) -> str:
     return f"https://{request.url.netloc}/api/auth/{provider}/callback"
 
 
-def _get_or_create_user(db: Session, email: str, name: str, picture: str, 
+def _get_or_create_user(db: Session, email: str, name: str, picture: str,
                         provider_id: str, provider: str) -> User:
     """Find existing user or create new one from OAuth data."""
     user = db.query(User).filter(User.email == email).first()
@@ -176,11 +180,12 @@ async def linkedin_callback(request: Request, db: Session = Depends(get_db)):
             print(f"❌ No access_token in response: {token}")
             return RedirectResponse(url=f"{FRONTEND_URL}/login?error=linkedin_failed")
 
-        # ✅ Fetch user info using the access token
-        userinfo_response = httpx.get(
-            'https://api.linkedin.com/v2/userinfo',
-            headers={'Authorization': f'Bearer {access_token}'}
-        )
+        # ✅ Fetch user info using the access token (async, non-blocking)
+        async with httpx.AsyncClient() as client:
+            userinfo_response = await client.get(
+                'https://api.linkedin.com/v2/userinfo',
+                headers={'Authorization': f'Bearer {access_token}'}
+            )
 
         if userinfo_response.status_code != 200:
             print(f"❌ LinkedIn userinfo failed: {userinfo_response.text}")
