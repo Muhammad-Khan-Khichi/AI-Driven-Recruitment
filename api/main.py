@@ -4,6 +4,10 @@ from fastapi.staticfiles import StaticFiles
 from starlette.middleware.sessions import SessionMiddleware
 import os
 
+from fastapi import Request
+from fastapi.responses import JSONResponse
+import traceback
+
 from .routes_auth import router as auth_router
 from .routes_jobs import router as jobs_router
 from api.admin import router as admin_router
@@ -21,6 +25,15 @@ app = FastAPI(
     description="AI-powered job search with FastAPI",
     version="1.0.0"
 )
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    print(f"❌ UNHANDLED EXCEPTION on {request.url.path}")
+    traceback.print_exc()
+    return JSONResponse(
+        status_code=500,
+        content={"detail": f"Internal server error: {str(exc)}"},
+    )
 
 # SessionMiddleware FIRST - stores OAuth state in cookies
 app.add_middleware(
