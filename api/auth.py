@@ -35,7 +35,7 @@ def get_current_user(request: Request, db: Session = Depends(get_db)):
         detail="Could not validate credentials",
     )
 
-    #   Read the JWT from the httpOnly cookie instead of an Authorization header
+    # ✅ Read the JWT from the httpOnly cookie instead of an Authorization header
     token = request.cookies.get("access_token")
     if token is None:
         raise credentials_exception
