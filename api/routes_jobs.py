@@ -1,8 +1,12 @@
+import asyncio
 import hashlib
 import json
 import os
 import tempfile
+import traceback
+from functools import partial
 from typing import Optional, List
+
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
@@ -21,7 +25,7 @@ router = APIRouter(prefix="/api/jobs", tags=["Jobs"])
 class JobSearchRequest(BaseModel):
     location: Optional[str] = None
     generate_cover_letters: bool = False
-    time_filter: Optional[str] = "any"   # ✅ NEW: "24h" | "7d" | "30d" | "any"
+    time_filter: Optional[str] = "any"
 
 
 class ResumeJobSearchRequest(BaseModel):
@@ -31,7 +35,7 @@ class ResumeJobSearchRequest(BaseModel):
     max_results_per_keyword: int = 20
     min_match_score: int = 20
     generate_cover_letters: bool = False
-    time_filter: Optional[str] = "any"   # ✅ NEW
+    time_filter: Optional[str] = "any"
 
 
 class ApplicationRequest(BaseModel):
@@ -72,7 +76,7 @@ def upload_resume(
 
     content = file.file.read()
 
-    # ── Compute a hash of the raw file bytes to detect duplicates ──
+    # Compute a hash of the raw file bytes to detect duplicates
     file_hash = hashlib.sha256(content).hexdigest()
 
     existing = db.query(Resume).filter(
@@ -89,7 +93,7 @@ def upload_resume(
             "skills": skills,
             "roles": roles,
             "parsed_chars": len(existing.parsed_text or ""),
-            "message": "✅ This resume was already uploaded — reusing existing data (no re-processing needed).",
+            "message": "",
             "duplicate": True
         }
 
@@ -124,7 +128,7 @@ def upload_resume(
             "skills": profile.get("skills", []),
             "roles": profile.get("job_titles", []),
             "parsed_chars": len(text),
-            "message": f"✅ Extracted {len(profile.get('skills', []))} skills (no PDF saved!)",
+            "message": f"  Extracted {len(profile.get('skills', []))} skills (no PDF saved!)",
             "duplicate": False
         }
     finally:
@@ -150,10 +154,10 @@ def search_jobs(
     if not resume:
         raise HTTPException(status_code=400, detail="Upload a resume first")
 
-    # ✅ Normalize & validate the time_filter
+    # Normalize & validate the time_filter
     time_filter = normalize_time_filter(request.time_filter)
 
-    # ✅ Debug log so you can verify the location is being used
+    # Debug log so you can verify the location is being used
     print(f'[jobs/search] user_id={current_user.id}, '
           f'location={request.location!r}, time_filter={time_filter!r}')
 
@@ -164,7 +168,7 @@ def search_jobs(
         generate_cover_letters=request.generate_cover_letters,
         location=request.location or current_user.location,
         user_id=current_user.id,
-        time_filter=time_filter   # ✅ NEW
+        time_filter=time_filter
     )
 
     search = JobSearch(
@@ -317,15 +321,21 @@ async def filter_jobs_endpoint(req: FilterRequest):
 
 
 # ============================================================
-# Resume-Based Job Search — passes time_filter too
+# Resume-Based Job Search — ASYNC with thread pool executor
 # ============================================================
 @router.post("/search-by-resume")
-def search_jobs_by_resume(
+async def search_jobs_by_resume(
     request: ResumeJobSearchRequest,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """Search for jobs using keywords extracted from user's resume."""
+    """Search for jobs using keywords extracted from user's resume.
+    
+    Uses asyncio.run_in_executor to run the blocking run_job_search() 
+    in a thread pool so it doesn't block the FastAPI event loop.
+    """
+    print(f"🚨 [search-by-resume] STARTED for user_id={current_user.id}")
+    
     # Step 1: Get resume
     if request.resume_id:
         resume = db.query(Resume).filter(
@@ -363,29 +373,38 @@ def search_jobs_by_resume(
             detail="Resume has no extracted skills. Please re-upload your resume."
         )
 
-    # ✅ Normalize & validate time_filter
+    # Normalize & validate time_filter
     time_filter = normalize_time_filter(request.time_filter)
-    print(f'[jobs/search-by-resume] user_id={current_user.id}, '
+    print(f'✅ [search-by-resume] Validation done. skills={len(resume_skills)}, '
           f'location={request.location!r}, time_filter={time_filter!r}')
 
     # Step 3: Generate smart search keywords
     search_keywords = generate_search_keywords(resume_skills)
+    print(f"🔍 [search-by-resume] Generated {len(search_keywords)} keywords: {search_keywords[:2]}")
 
-    # Step 4: Run job search for each keyword
+    # Step 4: Run job search for each keyword (in thread pool — non-blocking)
+    loop = asyncio.get_event_loop()
     all_jobs = []
     search_results = []
 
     for keyword in search_keywords[:2]:
         try:
-            results = run_job_search(
-                resume_text=resume.parsed_text or "",
-                resume_path=resume.file_path,
-                user_name=current_user.full_name or current_user.username,
-                generate_cover_letters=False,
-                location=request.location or current_user.location,
-                user_id=current_user.id,
-                custom_keywords=[keyword],
-                time_filter=time_filter   # ✅ NEW
+            print(f"🔍 [search-by-resume] Searching for '{keyword}'...")
+            
+            # Use run_in_executor to run sync run_job_search without blocking
+            results = await loop.run_in_executor(
+                None,  # default thread pool
+                partial(
+                    run_job_search,
+                    resume_text=resume.parsed_text or "",
+                    resume_path=resume.file_path,
+                    user_name=current_user.full_name or current_user.username,
+                    generate_cover_letters=False,
+                    location=request.location or current_user.location,
+                    user_id=current_user.id,
+                    custom_keywords=[keyword],
+                    time_filter=time_filter
+                )
             )
 
             jobs = results.get("all_jobs", [])
@@ -394,11 +413,14 @@ def search_jobs_by_resume(
                 "keyword": keyword,
                 "jobs_found": len(jobs)
             })
+            print(f"✅ [search-by-resume] '{keyword}' returned {len(jobs)} jobs")
+            
         except Exception as e:
-            print(f"Search failed for '{keyword}': {e}")
+            print(f"❌ [search-by-resume] Search failed for '{keyword}': {e}")
+            traceback.print_exc()
             continue
 
-    # Remove duplicates
+    # Step 5: Remove duplicates
     seen = set()
     unique_jobs = []
     for job in all_jobs:
@@ -409,7 +431,9 @@ def search_jobs_by_resume(
             seen.add(key)
             unique_jobs.append(job)
 
-    # Step 5: Score each job
+    print(f"🔍 [search-by-resume] {len(unique_jobs)} unique jobs after dedup")
+
+    # Step 6: Score each job
     scored_jobs = []
     for job in unique_jobs:
         score, matched, missing = score_job_against_skills(job, resume_skills)
@@ -421,11 +445,13 @@ def search_jobs_by_resume(
             job_copy["missing_skills"] = missing[:5]
             scored_jobs.append(job_copy)
 
-    # Step 6: Sort by match score
+    # Step 7: Sort by match score
     scored_jobs.sort(key=lambda x: x.get("match_score", 0), reverse=True)
 
-    # Step 7: Limit results
+    # Step 8: Limit results
     final_jobs = scored_jobs[:request.max_results_per_keyword * 3]
+
+    print(f"✅ [search-by-resume] Returning {len(final_jobs)} scored jobs")
 
     # Save search history
     search = JobSearch(
