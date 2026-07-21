@@ -35,16 +35,10 @@ async def global_exception_handler(request: Request, exc: Exception):
         content={"detail": f"Internal server error: {str(exc)}"},
     )
 
-# SessionMiddleware FIRST - stores OAuth state in cookies
-app.add_middleware(
-    SessionMiddleware,
-    secret_key=os.getenv("SESSION_SECRET_KEY", "dev-secret-change-in-production-12345"),
-    same_site="none",
-    https_only=True,
-    session_cookie="session",
-)
-
-# CORS - exact origins only, no wildcard with credentials
+# ============================================================
+# CORS FIRST → added last → runs OUTERMOST (wraps everything)
+# This ensures preflight OPTIONS requests get correct headers
+# ============================================================
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -57,8 +51,25 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"],
+    max_age=3600,
 )
 
+# ============================================================
+# SessionMiddleware AFTER CORS → added first → runs INSIDE
+# Runs inside CORS so it doesn't override CORS headers
+# ============================================================
+app.add_middleware(
+    SessionMiddleware,
+    secret_key=os.getenv("SESSION_SECRET_KEY", "dev-secret-change-in-production-12345"),
+    same_site="none",
+    https_only=True,
+    session_cookie="session",
+)
+
+# ============================================================
+# Routers
+# ============================================================
 app.include_router(auth_router)
 app.include_router(jobs_router)
 app.include_router(admin_router)
