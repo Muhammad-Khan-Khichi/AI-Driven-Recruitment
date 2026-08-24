@@ -14,7 +14,7 @@ from api.auth import get_password_hash, verify_password, get_current_user
 from utils.email import send_reset_password_email
 from api.config import RESET_TOKEN_EXPIRE_HOURS, FRONTEND_URL
 
-# ✅ THIS IS THE ROUTER (must be named 'router')
+#   THIS IS THE ROUTER (must be named 'router')
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 
 
@@ -72,7 +72,7 @@ async def forgot_password(
         user_id=user.id,
         token=token_hash,
         expires_at=datetime.utcnow() + timedelta(
-            hours=RESET_TOKEN_EXPIRE_HOURS  # ✅ FIXED: removed settings.
+            hours=RESET_TOKEN_EXPIRE_HOURS  #   FIXED: removed settings.
         ),
         used=False,
         created_at=datetime.utcnow()
@@ -81,7 +81,7 @@ async def forgot_password(
     db.commit()
 
     # Build reset link
-    reset_link = f"{FRONTEND_URL}/reset-password?token={token}"  # ✅ FIXED: removed settings.
+    reset_link = f"{FRONTEND_URL}/reset-password?token={token}"  #   FIXED: removed settings.
 
     # Send email
     send_reset_password_email(user.email, reset_link)

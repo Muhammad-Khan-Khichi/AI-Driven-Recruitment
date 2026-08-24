@@ -57,10 +57,10 @@ def search_all_sources(query: str, location: str = None, time_filter: str = "any
     Search jobs - LINKEDIN ONLY! 🎯
     
     Why LinkedIn only?
-    ✅ Works for ALL countries (Pakistan, US, UK, India, etc.)
-    ✅ Returns real, fresh job listings
-    ✅ Fastest (~20s per search)
-    ✅ No API key needed
+      Works for ALL countries (Pakistan, US, UK, India, etc.)
+      Returns real, fresh job listings
+      Fastest (~20s per search)
+      No API key needed
     
     Disabled sources:
     ❌ Adzuna - only UK/US/IN/AU (returned 0 for Pakistan)
@@ -79,7 +79,7 @@ def search_all_sources(query: str, location: str = None, time_filter: str = "any
     try:
         linkedin_jobs = search_linkedin_jobs(query, location, time_filter=time_filter)
         all_jobs.extend(linkedin_jobs)
-        logger.info(f"✅ LinkedIn returned {len(linkedin_jobs)} jobs for '{query}' in '{location}' (filter: {time_filter})")
+        logger.info(f"  LinkedIn returned {len(linkedin_jobs)} jobs for '{query}' in '{location}' (filter: {time_filter})")
     except Exception as e:
         logger.warning(f"❌ LinkedIn search failed for '{query}' in '{location}': {e}")
 

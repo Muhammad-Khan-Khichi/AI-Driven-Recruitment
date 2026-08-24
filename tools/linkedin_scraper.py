@@ -29,12 +29,12 @@ def search_linkedin_jobs(query: str, location: str = "Lahore", time_filter: str 
         # Build params WITHOUT hardcoded "Pakistan"
         params = {
             "keywords": query,
-            "location": location,  # ✅ FIX: no more "f'{location}, Pakistan'"
+            "location": location,  #   FIX: no more "f'{location}, Pakistan'"
             "position": 1,
             "pageNum": 0
         }
         
-        # ✅ NEW: Apply time filter only if not "any"
+        #   NEW: Apply time filter only if not "any"
         tpr_code = LINKEDIN_TIME_FILTERS.get(time_filter, "")
         if tpr_code:
             params["f_TPR"] = tpr_code

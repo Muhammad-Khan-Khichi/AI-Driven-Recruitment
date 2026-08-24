@@ -18,17 +18,17 @@ class Settings(BaseSettings):
     GOOGLE_CLIENT_ID: Optional[str] = None
     GOOGLE_CLIENT_SECRET: Optional[str] = None
     
-    # ✅ Email Settings (NEW)
+    #   Email Settings (NEW)
     EMAIL_FROM: str = ""
     SMTP_HOST: str = ""
     SMTP_USER: str = ""
     SMTP_PASS: str = ""
     SMTP_PORT: int = 587
     
-    # ✅ Frontend (NEW)
+    #   Frontend (NEW)
     FRONTEND_URL: str = "http://localhost:5173"
     
-    # ✅ Token expiration (NEW)
+    #   Token expiration (NEW)
     RESET_TOKEN_EXPIRE_HOURS: int = 1
     
     # Environment

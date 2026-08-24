@@ -4,6 +4,8 @@ from fastapi.staticfiles import StaticFiles
 from starlette.middleware.sessions import SessionMiddleware
 import os
 
+import fastapi, starlette
+
 from fastapi import Request
 from fastapi.responses import JSONResponse
 import traceback
@@ -99,6 +101,13 @@ def root():
             "linkedin-optimization", "interview-prep"
         ],
         "docs": "/docs"
+    }
+
+@app.get("/debug-versions")
+def debug_versions():
+    return {
+        "fastapi": fastapi.__version__,
+        "starlette": starlette.__version__,
     }
 
 

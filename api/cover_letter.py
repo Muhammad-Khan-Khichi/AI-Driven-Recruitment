@@ -64,7 +64,7 @@ async def generate_cover_letter_endpoint(
     if not resume:
         raise HTTPException(status_code=404, detail="Resume not found")
     
-    # ✅ FIX: Build profile from resume (uses extracted_skills, not skills)
+    #   FIX: Build profile from resume (uses extracted_skills, not skills)
     profile = {
         "skills": [],
         "level": "mid",

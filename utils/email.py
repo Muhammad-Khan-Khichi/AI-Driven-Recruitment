@@ -238,7 +238,7 @@ class EmailService:
                     server.login(self.config.user, self.config.password)
                     server.sendmail(self.config.from_email, to_email, message.as_string())
                 
-                logger.info(f"✅ Email sent successfully to {to_email}")
+                logger.info(f"  Email sent successfully to {to_email}")
                 return True
                 
             except smtplib.SMTPException as e:

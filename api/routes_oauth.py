@@ -19,7 +19,7 @@ router = APIRouter(prefix="/api/auth", tags=["oauth"])
 # Initialize OAuth
 oauth = OAuth()
 
-# ✅ Register Google — uses OpenID Connect discovery (works perfectly)
+#   Register Google — uses OpenID Connect discovery (works perfectly)
 oauth.register(
     name='google',
     client_id=GOOGLE_CLIENT_ID,
@@ -28,7 +28,7 @@ oauth.register(
     client_kwargs={'scope': 'openid email profile'}
 )
 
-# ✅ Register LinkedIn — hardcoded endpoints (LinkedIn's OIDC discovery
+#   Register LinkedIn — hardcoded endpoints (LinkedIn's OIDC discovery
 # endpoint at /oauth/v2/.well-known/openid-configuration 404s, so we skip
 # discovery entirely and point Authlib directly at the known endpoints).
 oauth.register(
@@ -149,7 +149,7 @@ async def google_callback(request: Request, db: Session = Depends(get_db)):
             print(f"❌ No email in userinfo: {user_info}")
             return RedirectResponse(url=f"{FRONTEND_URL}/login?error=no_email")
 
-        print(f"✅ Google user: {email}")
+        print(f"  Google user: {email}")
 
         user = _get_or_create_user(db, email, name, picture, google_id, 'google')
 
@@ -158,7 +158,7 @@ async def google_callback(request: Request, db: Session = Depends(get_db)):
             expires_delta=timedelta(days=7)
         )
 
-        # ✅ Cookie instead of token in the URL
+        #   Cookie instead of token in the URL
         response = RedirectResponse(url=f"{FRONTEND_URL}/auth/callback")
         _set_auth_cookie(response, jwt_token)
         return response
@@ -212,7 +212,7 @@ async def linkedin_callback(request: Request, db: Session = Depends(get_db)):
             return RedirectResponse(url=f"{FRONTEND_URL}/login?error=linkedin_failed")
 
         user_info = userinfo_response.json()
-        print(f"✅ LinkedIn user info: {user_info}")
+        print(f"  LinkedIn user info: {user_info}")
 
         email       = user_info.get('email')
         name        = user_info.get('name', '')
@@ -230,7 +230,7 @@ async def linkedin_callback(request: Request, db: Session = Depends(get_db)):
             expires_delta=timedelta(days=7)
         )
 
-        # ✅ Cookie instead of token in the URL
+        #   Cookie instead of token in the URL
         response = RedirectResponse(url=f"{FRONTEND_URL}/auth/callback")
         _set_auth_cookie(response, jwt_token)
         return response
